@@ -8,9 +8,21 @@
         swartz.models))
 
 (html/deftemplate base-template "templates/base.html"
-  [{:keys [content flash]}]
+  [{:keys [content flash identity]}]
   [:#page] (html/content content)
-  [:.flash] (html/content flash))
+  [:.flash] (html/content flash)
+  [:.auth :.identity :.name] (fn [el]
+                               (if (nil? identity)
+                                 el
+                                 ((html/content (:current identity)) el)))
+  [:.auth :.logout] (fn [el]
+                      (if (nil? identity)
+                        el
+                        ((html/remove-class "hidden") el)))
+  [:.auth :.login] (fn [el]
+                     (if (nil? identity)
+                       el
+                       ((html/add-class "hidden") el))))
 
 (html/defsnippet home-page "templates/home.html"
   [:.home]
@@ -32,7 +44,8 @@
    :roles #{::user}})
 
 (defn get-homepage [req]
-  (base-template {:content (home-page)}))
+  (base-template {:content (home-page)
+                  :identity (friend/identity req)}))
 
 (defn get-login [req]
   (base-template {:content (login-form)}))

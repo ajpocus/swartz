@@ -1,6 +1,7 @@
 (ns swartz.core
   (:require [ring.adapter.jetty :refer [run-jetty]]
             [ring.middleware.defaults :refer [wrap-defaults site-defaults]]
+            [ring.util.response :refer [redirect]]
             (compojure [core :refer [defroutes GET POST]]
                        [handler :refer [site]]
                        [route :refer [resources not-found]])
@@ -18,6 +19,7 @@
   (GET "/login" req (ctrl/get-login req))
   (GET "/signup" req (ctrl/get-signup req))
   (POST "/signup" req (ctrl/post-signup req))
+  (GET "/logout" req (friend/logout* (redirect "/")))
 
   (resources "/")
   (not-found "Page not found."))

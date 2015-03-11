@@ -3,17 +3,28 @@
     <head>
         <meta charset="utf-8">
 
-        <link rel="stylesheet" href="/css/reset.css">
+        <link rel="stylesheet" href="/css/bootstrap.min.css">
+        <link rel="stylesheet" href="/css/bootstrap-theme.min.css">
 
         <script src="/js/jquery.min.js"></script>
+        <script src="/js/bootstrap.min.js"></script>
     </head>
 
     <body>
         <header>
             <h1 class="title">swartz</h1>
             <div class="auth">
-                <a href="/signup">signup</a>
-                <a href="/login">login</a>
+                <div class="login">
+                    <a href="/signup">signup</a>
+                    <a href="/login">login</a>
+                </div>
+
+                <div class="logout hidden">
+                    <div class="identity">
+                        logged in as <span class="name"></span>
+                    </div>
+                    <a href="/logout">logout</a>
+                </div>
             </div>
         </header>
 
