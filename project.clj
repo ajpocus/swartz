@@ -11,7 +11,8 @@
                  [korma "0.4.0"]
                  [org.postgresql/postgresql "9.4-1201-jdbc41"]
                  [org.clojure/java.jdbc "0.3.5"]
-                 [lobos "1.0.0-beta3"]]
+                 [lobos "1.0.0-beta3"]
+                 [com.cemerick/friend "0.2.1"]]
   :plugins [[lein-ring "0.9.2"]]
   :ring {:handler swartz.core/handler}
   :main ^:skip-aot swartz.core
