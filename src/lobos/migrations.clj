@@ -24,6 +24,7 @@
   (up [] (create
           (tbl :comments
                (text :content)
+               (refer-to :users)
                (refer-to :posts)
                (refer-to :comments))))
   (down [] (drop (table :comments))))

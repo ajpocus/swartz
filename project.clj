@@ -14,7 +14,9 @@
                  [lobos "1.0.0-beta3"]
                  [com.cemerick/friend "0.2.1"]]
   :plugins [[lein-ring "0.9.2"]]
-  :ring {:handler swartz.core/handler}
+  :ring {:handler swartz.core/handler
+         :auto-reload? true
+         :auto-refresh true}
   :main ^:skip-aot swartz.core
   :target-path "target/%s"
   :profiles {:uberjar {:aot :all}})

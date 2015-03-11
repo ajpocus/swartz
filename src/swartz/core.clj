@@ -14,7 +14,7 @@
   (:gen-class))
 
 (defroutes app-routes
-  (GET "/" req (ctrl/get-homepage req))
+  (GET "/" req (ctrl/get-posts req))
 
   (GET "/login" req (ctrl/get-login req))
   (GET "/signup" req (ctrl/get-signup req))
@@ -25,6 +25,8 @@
   (GET "/posts/new" req (friend/authenticated (ctrl/new-post req)))
   (POST "/posts" req (friend/authenticated (ctrl/create-post req)))
   (GET "/posts/:id" req (ctrl/get-post req))
+
+  (POST "/posts/:id/comments" req (ctrl/create-comment req))
 
   (resources "/")
   (not-found "Page not found."))

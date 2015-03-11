@@ -42,28 +42,33 @@
 (html/defsnippet post-snippet "templates/post-snippet.html"
   [:.post]
   [post]
-  [:.post :.title] (html/content (:title post))
-  [:.post :a.url] (fn [el]
-                    (let [url (:url post)]
-                      (if (nil? url)
-                        ((html/set-attr :href (str "/posts/" (:id post))) el)
-                        ((html/set-attr :href url) el)))))
+  [:a.title] (html/content (:title post))
+  [:a.title] (fn [el]
+               (let [url (:url post)]
+                 ((html/content (:title post)) el)
+                 (if (nil? url)
+                   ((html/set-attr :href (str "/posts/" (:id post))) el)
+                   ((html/set-attr :href url) el)))))
 
 (html/defsnippet post-list "templates/post-list.html"
   [:.post-list]
   [{:keys [posts]}]
   [:.content] (html/content (map post-snippet posts)))
 
-(html/defsnippet post-page "templates/post-snippet.html"
+(html/defsnippet post-page "templates/show-post.html"
   [:.post]
   [post]
-  [:.post :.title] (html/content (:title post))
-  [:.post :a.url] (fn [el]
-                    (let [url (:url post)]
-                      (if (nil? url)
-                        ((html/set-attr :href (str "/posts/" (:id post))) el)
-                        ((html/set-attr :href url) el))))
-  [:.post :.content] (html/content (:content post)))
+  [:a.title] (html/content (:title post))
+  [:a.title] (fn [el]
+               (let [url (:url post)]
+                 (if (nil? url)
+                   ((html/set-attr :href (str "/posts/" (:id post))) el)
+                   ((html/set-attr :href url) el))))
+  [:.content] (html/content (:content post))
+  [:.new-comment :form.comment] (html/set-attr
+                                 :action
+                                 (str "/posts/" (:id post) "/comments"))
+  [:.anti-forgery-field] (html/html-content (anti-forgery-field)))
 
 (html/defsnippet new-post-form "templates/new-post-form.html"
   [:.new-post]
@@ -124,3 +129,14 @@
     (pprint post)
     (base-template
      {:content (post-page post)})))
+
+(defn create-comment [req]
+  (let [params (:params req)
+        post-id (Integer/parseInt (:id params))
+        post (first (select posts (where {:id post-id})))
+        identity (friend/identity req)]
+    (pprint identity)
+    (insert comments (values {:content (:content params)
+                              :post_id post-id
+                              :user_id (:id identity)}))
+    (redirect (str "/posts/" post-id))))
