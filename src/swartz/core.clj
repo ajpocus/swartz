@@ -19,12 +19,12 @@
   (GET "/login" req (ctrl/get-login req))
   (GET "/signup" req (ctrl/get-signup req))
   (POST "/signup" req (ctrl/post-signup req))
-  (GET "/logout" req (friend/logout* (redirect "/")))
+  (GET "/logout" [] (friend/logout* (redirect "/")))
 
   (GET "/posts" req (ctrl/get-posts req))
   (GET "/posts/new" req (friend/authenticated (ctrl/new-post req)))
-  (POST "/posts" req (friend/authenticated (ctrl/create-post)))
-  (GET "/posts/:id" req (ctrl/get-post))
+  (POST "/posts" req (friend/authenticated (ctrl/create-post req)))
+  (GET "/posts/:id" req (ctrl/get-post req))
 
   (resources "/")
   (not-found "Page not found."))

@@ -3,7 +3,8 @@
             [ring.util.response :refer [redirect]]
             [ring.util.anti-forgery :refer [anti-forgery-field]]
             [cemerick.friend :as friend]
-            [cemerick.friend.credentials :as creds])
+            [cemerick.friend.credentials :as creds]
+            [clojure.pprint :refer [pprint]])
   (:use korma.core
         swartz.models))
 
@@ -35,6 +36,37 @@
 
 (html/defsnippet signup-form "templates/signup.html"
   [:.signup]
+  []
+  [:.anti-forgery-field] (html/html-content (anti-forgery-field)))
+
+(html/defsnippet post-snippet "templates/post-snippet.html"
+  [:.post]
+  [post]
+  [:.post :.title] (html/content (:title post))
+  [:.post :a.url] (fn [el]
+                    (let [url (:url post)]
+                      (if (nil? url)
+                        ((html/set-attr :href (str "/posts/" (:id post))) el)
+                        ((html/set-attr :href url) el)))))
+
+(html/defsnippet post-list "templates/post-list.html"
+  [:.post-list]
+  [{:keys [posts]}]
+  [:.content] (html/content (map post-snippet posts)))
+
+(html/defsnippet post-page "templates/post-snippet.html"
+  [:.post]
+  [post]
+  [:.post :.title] (html/content (:title post))
+  [:.post :a.url] (fn [el]
+                    (let [url (:url post)]
+                      (if (nil? url)
+                        ((html/set-attr :href (str "/posts/" (:id post))) el)
+                        ((html/set-attr :href url) el))))
+  [:.post :.content] (html/content (:content post)))
+
+(html/defsnippet new-post-form "templates/new-post-form.html"
+  [:.new-post]
   []
   [:.anti-forgery-field] (html/html-content (anti-forgery-field)))
 
@@ -72,22 +104,23 @@
 (defn get-posts [req]
   (let [posts (select posts)]
     (base-template
-     {:content (post-list
-                {:content (map post-snippet posts)})})))
+     {:content (post-list {:posts posts})})))
 
 (defn new-post [req]
   (base-template {:content (new-post-form)}))
 
 (defn create-post [req]
-  (let [params (:post (:params req))
+  (let [params (:params req)
         post (insert posts (values {:title (:title params)
-                                    :url (:url params)
+                                    :url (if (empty? (:url params))
+                                           nil
+                                           (:url params))
                                     :content (:content params)}))]
     (redirect (str "/posts/" (:id post)))))
 
 (defn get-post [req]
   (let [post-id (:id (:params req))
-        post (:first (select posts (where {:id post-id})))]
+        post (first (select posts (where {:id (Integer/parseInt post-id)})))]
+    (pprint post)
     (base-template
-     {:content (post-page
-                {:post post})})))
+     {:content (post-page post)})))

@@ -1,0 +1,19 @@
+<div class="new-post">
+    <form action="/posts" method="post">
+        <div class="field">
+            <input type="text" name="title" placeholder="title" required>
+        </div>
+
+        <div class="field">
+            <input type="url" name="url" placeholder="url (optional)">
+        </div>
+
+        <div class="field">
+            <textarea name="content" placeholder="Post content"></textarea>
+        </div>
+
+        <div class="anti-forgery-field"></div>
+
+        <input type="submit" value="create post">
+    </form>
+</div>
