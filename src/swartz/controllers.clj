@@ -126,7 +126,6 @@
 (defn get-post [req]
   (let [post-id (:id (:params req))
         post (first (select posts (where {:id (Integer/parseInt post-id)})))]
-    (pprint post)
     (base-template
      {:content (post-page post)})))
 
@@ -134,9 +133,9 @@
   (let [params (:params req)
         post-id (Integer/parseInt (:id params))
         post (first (select posts (where {:id post-id})))
-        identity (friend/identity req)]
-    (pprint identity)
+        identity (friend/identity req)
+        user (first (select users (where {:username (:current identity)})))]
     (insert comments (values {:content (:content params)
                               :post_id post-id
-                              :user_id (:id identity)}))
+                              :user_id (:id user)}))
     (redirect (str "/posts/" post-id))))
