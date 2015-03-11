@@ -68,3 +68,26 @@
                            (values {:username username
                                     :password (creds/hash-bcrypt password)}))]
           (friend/merge-authentication (redirect "/") (create-user user)))))))
+
+(defn get-posts [req]
+  (let [posts (select posts)]
+    (base-template
+     {:content (post-list
+                {:content (map post-snippet posts)})})))
+
+(defn new-post [req]
+  (base-template {:content (new-post-form)}))
+
+(defn create-post [req]
+  (let [params (:post (:params req))
+        post (insert posts (values {:title (:title params)
+                                    :url (:url params)
+                                    :content (:content params)}))]
+    (redirect (str "/posts/" (:id post)))))
+
+(defn get-post [req]
+  (let [post-id (:id (:params req))
+        post (:first (select posts (where {:id post-id})))]
+    (base-template
+     {:content (post-page
+                {:post post})})))

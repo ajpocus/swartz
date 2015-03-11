@@ -21,6 +21,11 @@
   (POST "/signup" req (ctrl/post-signup req))
   (GET "/logout" req (friend/logout* (redirect "/")))
 
+  (GET "/posts" req (ctrl/get-posts req))
+  (GET "/posts/new" req (friend/authenticated (ctrl/new-post req)))
+  (POST "/posts" req (friend/authenticated (ctrl/create-post)))
+  (GET "/posts/:id" req (ctrl/get-post))
+
   (resources "/")
   (not-found "Page not found."))
 
