@@ -53,7 +53,7 @@
 (html/defsnippet post-list "templates/post-list.html"
   [:.post-list]
   [{:keys [posts]}]
-  [:.content] (html/content (map post-snippet posts)))
+  [:.post-list] (html/content (map post-snippet posts)))
 
 (html/defsnippet post-page "templates/show-post.html"
   [:.post]
