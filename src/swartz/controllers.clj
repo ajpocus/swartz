@@ -54,7 +54,21 @@
   [:.post-list]
   [{:keys [posts]}]
   [:.post-list] (html/content (map (fn [post]
-                                     (post-snippet {:post post})) posts)))
+                                     (post-snippet {:post post}))
+                                   posts)))
+
+(html/defsnippet comment-snippet "templates/comment-snippet.html"
+  [:.comment]
+  [{:keys [comment]}]
+  [:.content] (html/content (:content comment))
+  [:.user] (html/append (:username (:user comment))))
+
+(html/defsnippet comment-list "templates/comment-list.html"
+  [:.comment-list]
+  [{:keys [comments]}]
+  [:.comment-list] (html/content (map (fn [comment]
+                                        (comment-snippet {:comment comment}))
+                                      comments)))
 
 (html/defsnippet post-page "templates/show-post.html"
   [:.post]
@@ -77,6 +91,7 @@
                    (if (nil? identity)
                      ((html/remove-class "hidden") el)
                      el))
+  [:.post :.comments] (html/append (comment-list {:comments (:comments post)}))
   [:.anti-forgery-field] (html/html-content (anti-forgery-field)))
 
 (html/defsnippet new-post-form "templates/new-post-form.html"
@@ -134,8 +149,10 @@
     (redirect (str "/posts/" (:id post)))))
 
 (defn get-post [req]
-  (let [post-id (:id (:params req))
-        post (first (select posts (where {:id (Integer/parseInt post-id)})))
+  (let [post-id (Integer/parseInt (:id (:params req)))
+        post (first (select posts
+                            (with comments)
+                            (where {:id post-id})))
         identity (friend/identity req)]
     (base-template
      {:content (post-page {:post post
