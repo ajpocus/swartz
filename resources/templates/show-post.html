@@ -1,22 +1,25 @@
 <div class="post">
-    <a class="title"></a>
+    <h2><a class="title"></a></h2>
     <div class="content"></div>
 
-    <div class="new-comment">
-        <form class="comment" method="post">
-            <div class="field">
-                <textarea name="content" placeholder="Comment on this post">
-                </textarea>
-            </div>
+    <div class="comments">
+        <h3>Comments</h3>
+        <div class="new-comment">
+            <form class="comment" method="post">
+                <div class="field">
+                    <textarea name="content" placeholder="Comment on this post">
+                    </textarea>
+                </div>
 
-            <div class="anti-forgery-field"></div>
+                <div class="anti-forgery-field"></div>
 
-            <input type="submit" value="Comment">
-        </form>
+                <input type="submit" value="Comment">
+            </form>
+        </div>
+        <div class="no-comment hidden">
+            You have to <a href="/login">login</a> to comment.
+        </div>
+
+        <ul class="comment-list"></ul>
     </div>
-    <div class="no-comment hidden">
-        You have to <a href="/login">login</a> to comment.
-    </div>
-
-    <div class="comments"></div>
 </div>

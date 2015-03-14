@@ -58,7 +58,7 @@
 
 (html/defsnippet post-page "templates/show-post.html"
   [:.post]
-  [post]
+  [{:keys [post identity]}]
   [:a.title] (html/content (:title post))
   [:a.title] (fn [el]
                (let [url (:url post)]
@@ -69,6 +69,14 @@
   [:.new-comment :form.comment] (html/set-attr
                                  :action
                                  (str "/posts/" (:id post) "/comments"))
+  [:.new-comment] (fn [el]
+                    (if (nil? identity)
+                      ((html/add-class "hidden") el)
+                      el))
+  [:.no-comment] (fn [el]
+                   (if (nil? identity)
+                     ((html/remove-class "hidden") el)
+                     el))
   [:.anti-forgery-field] (html/html-content (anti-forgery-field)))
 
 (html/defsnippet new-post-form "templates/new-post-form.html"
@@ -127,10 +135,12 @@
 
 (defn get-post [req]
   (let [post-id (:id (:params req))
-        post (first (select posts (where {:id (Integer/parseInt post-id)})))]
+        post (first (select posts (where {:id (Integer/parseInt post-id)})))
+        identity (friend/identity req)]
     (base-template
-     {:content (post-page post)
-      :identity (friend/identity req)})))
+     {:content (post-page {:post post
+                           :identity identity})
+      :identity identity})))
 
 (defn create-comment [req]
   (let [params (:params req)
