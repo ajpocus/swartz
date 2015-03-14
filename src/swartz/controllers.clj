@@ -41,7 +41,7 @@
 
 (html/defsnippet post-snippet "templates/post-snippet.html"
   [:.post]
-  [post]
+  [{:keys [post]}]
   [:a.title] (html/content (:title post))
   [:a.title] (fn [el]
                (let [url (:url post)]
