@@ -9,14 +9,14 @@
 (declare users posts comments)
 
 (defentity users
-  (has-many posts))
+  (has-many posts {:fk :user_id}))
 
 (defentity posts
-  (belongs-to users)
-  (has-many comments))
+  (belongs-to users {:fk :user_id})
+  (has-many comments {:fk :post_id}))
 
 (defentity comments
-  (belongs-to users)
-  (belongs-to posts)
-  (belongs-to comments)
-  (has-many comments))
+  (belongs-to users {:fk :user_id})
+  (belongs-to posts {:fk :post_id})
+  (belongs-to comments {:fk :comment_id})
+  (has-many comments {:fk :comment_id}))
