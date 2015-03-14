@@ -1,103 +1,10 @@
 (ns swartz.controllers
-  (:require [net.cgrand.enlive-html :as html]
-            [ring.util.response :refer [redirect]]
-            [ring.util.anti-forgery :refer [anti-forgery-field]]
+  (:require [ring.util.response :refer [redirect]]
             [cemerick.friend :as friend]
             [cemerick.friend.credentials :as creds]
-            [clojure.pprint :refer [pprint]])
+            [swartz.views :as views])
   (:use korma.core
         swartz.models))
-
-(html/deftemplate base-template "templates/base.html"
-  [{:keys [content flash identity]}]
-  [:#page] (html/content content)
-  [:.flash] (html/content flash)
-  [:.auth :.identity :.name] (fn [el]
-                               (if (nil? identity)
-                                 el
-                                 ((html/content (:current identity)) el)))
-  [:.auth :.logout] (fn [el]
-                      (if (nil? identity)
-                        el
-                        ((html/remove-class "hidden") el)))
-  [:.auth :.login] (fn [el]
-                     (if (nil? identity)
-                       el
-                       ((html/add-class "hidden") el))))
-
-(html/defsnippet home-page "templates/home.html"
-  [:.home]
-  [])
-
-(html/defsnippet login-form "templates/login.html"
-  [:.login]
-  []
-  [:.anti-forgery-field] (html/html-content (anti-forgery-field)))
-
-(html/defsnippet signup-form "templates/signup.html"
-  [:.signup]
-  []
-  [:.anti-forgery-field] (html/html-content (anti-forgery-field)))
-
-(html/defsnippet post-snippet "templates/post-snippet.html"
-  [:.post]
-  [{:keys [post]}]
-  [:a.title] (html/content (:title post))
-  [:a.title] (fn [el]
-               (let [url (:url post)]
-                 ((html/content (:title post)) el)
-                 (if (nil? url)
-                   ((html/set-attr :href (str "/posts/" (:id post))) el)
-                   ((html/set-attr :href url) el)))))
-
-(html/defsnippet post-list "templates/post-list.html"
-  [:.post-list]
-  [{:keys [posts]}]
-  [:.post-list] (html/content (map (fn [post]
-                                     (post-snippet {:post post}))
-                                   posts)))
-
-(html/defsnippet comment-snippet "templates/comment-snippet.html"
-  [:.comment]
-  [{:keys [comment]}]
-  [:.content] (html/content (:content comment))
-  [:.user] (html/append (:username (:user comment))))
-
-(html/defsnippet comment-list "templates/comment-list.html"
-  [:.comment-list]
-  [{:keys [comments]}]
-  [:.comment-list] (html/content (map (fn [comment]
-                                        (comment-snippet {:comment comment}))
-                                      comments)))
-
-(html/defsnippet post-page "templates/show-post.html"
-  [:.post]
-  [{:keys [post identity]}]
-  [:a.title] (html/content (:title post))
-  [:a.title] (fn [el]
-               (let [url (:url post)]
-                 (if (nil? url)
-                   ((html/set-attr :href (str "/posts/" (:id post))) el)
-                   ((html/set-attr :href url) el))))
-  [:.content] (html/content (:content post))
-  [:.new-comment :form.comment] (html/set-attr
-                                 :action
-                                 (str "/posts/" (:id post) "/comments"))
-  [:.new-comment] (fn [el]
-                    (if (nil? identity)
-                      ((html/add-class "hidden") el)
-                      el))
-  [:.no-comment] (fn [el]
-                   (if (nil? identity)
-                     ((html/remove-class "hidden") el)
-                     el))
-  [:.post :.comments] (html/append (comment-list {:comments (:comments post)}))
-  [:.anti-forgery-field] (html/html-content (anti-forgery-field)))
-
-(html/defsnippet new-post-form "templates/new-post-form.html"
-  [:.new-post]
-  []
-  [:.anti-forgery-field] (html/html-content (anti-forgery-field)))
 
 (defn- create-user [{:keys [username password]}]
   {:identity username
@@ -105,15 +12,15 @@
    :roles #{::user}})
 
 (defn get-homepage [req]
-  (base-template {:content (home-page)
-                  :identity (friend/identity req)}))
+  (views/base-template {:page (views/home-page)
+                        :identity (friend/identity req)}))
 
 (defn get-login [req]
-  (base-template {:content (login-form)}))
+  (views/base-template {:page (views/login-form)}))
 
 (defn get-signup [req]
-  (base-template {:content (signup-form)
-                  :flash (:flash req)}))
+  (views/base-template {:page (views/signup-form)
+                        :flash (:flash req)}))
 
 (defn post-signup [req]
   (let [{:keys [username password]} (:params req)]
@@ -132,12 +39,12 @@
 
 (defn get-posts [req]
   (let [posts (select posts)]
-    (base-template
-     {:content (post-list {:posts posts})
+    (views/base-template
+     {:page (views/post-list {:posts posts})
       :identity (friend/identity req)})))
 
 (defn new-post [req]
-  (base-template {:content (new-post-form)}))
+  (views/base-template {:page (views/new-post-form)}))
 
 (defn create-post [req]
   (let [params (:params req)
@@ -154,9 +61,9 @@
                             (with comments)
                             (where {:id post-id})))
         identity (friend/identity req)]
-    (base-template
-     {:content (post-page {:post post
-                           :identity identity})
+    (views/base-template
+     {:page (views/post-page {:post post
+                              :identity identity})
       :identity identity})))
 
 (defn create-comment [req]
