@@ -53,7 +53,8 @@
 (html/defsnippet post-list "templates/post-list.html"
   [:.post-list]
   [{:keys [posts]}]
-  [:.post-list] (html/content (map post-snippet posts)))
+  [:.post-list] (html/content (map (fn [post]
+                                     (post-snippet {:post post})) posts)))
 
 (html/defsnippet post-page "templates/show-post.html"
   [:.post]
@@ -109,7 +110,8 @@
 (defn get-posts [req]
   (let [posts (select posts)]
     (base-template
-     {:content (post-list {:posts posts})})))
+     {:content (post-list {:posts posts})
+      :identity (friend/identity req)})))
 
 (defn new-post [req]
   (base-template {:content (new-post-form)}))
@@ -127,7 +129,8 @@
   (let [post-id (:id (:params req))
         post (first (select posts (where {:id (Integer/parseInt post-id)})))]
     (base-template
-     {:content (post-page post)})))
+     {:content (post-page post)
+      :identity (friend/identity req)})))
 
 (defn create-comment [req]
   (let [params (:params req)

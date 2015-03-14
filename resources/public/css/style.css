@@ -1,4 +1,4 @@
-header, body, footer {
+body {
   background: #eee;
   font-color: #111;
   margin: 12px;
@@ -7,6 +7,7 @@ header, body, footer {
 header {
   border-bottom: 1px solid rgba(0, 0, 0, 0.2);
   padding: 8px 0;
+  margin: 8px 0;
 }
 
 .post-list, .post-list .post a.title {
