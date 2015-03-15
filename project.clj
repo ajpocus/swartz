@@ -4,6 +4,7 @@
   :license {:name "MIT License"
             :url "http://opensource.org/licenses/MIT"}
   :dependencies [[org.clojure/clojure "1.6.0"]
+                 [org.clojure/tools.logging "0.3.1"]
                  [ring "1.3.2"]
                  [ring/ring-defaults "0.1.4"]
                  [compojure "1.3.2"]

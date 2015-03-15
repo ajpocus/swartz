@@ -8,7 +8,8 @@
             [cemerick.friend :as friend]
             (cemerick.friend [workflows :as workflows]
                              [credentials :as creds])
-            [swartz.controllers :as ctrl])
+            [swartz.controllers :as ctrl]
+            [swartz.middleware :as ware])
   (:use korma.core
         swartz.models)
   (:gen-class))
@@ -45,7 +46,8 @@
                                               user))
                             :workflows [(workflows/interactive-form)]})
       (wrap-defaults site-defaults)
-      (site)))
+      ware/log-request
+      site))
 
 (defn -main
   "Start a ring/jetty server."
