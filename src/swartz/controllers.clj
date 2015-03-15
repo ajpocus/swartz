@@ -2,6 +2,7 @@
   (:require [ring.util.response :refer [redirect]]
             [cemerick.friend :as friend]
             [cemerick.friend.credentials :as creds]
+            [clojure.tools.logging :as log]
             [swartz.views :as views])
   (:use korma.core
         swartz.models
@@ -13,6 +14,7 @@
    :roles #{::user}})
 
 (defn get-homepage [req]
+  (log/info (friend/identity req))
   (wrap-view req (views/home-page)))
 
 (defn get-login [req]

@@ -15,36 +15,36 @@
                            :flash ~flash})))
 
 (defn if-show [pred]
-  "If the predicate is truthy, show the node. Otherwise, hide it."
+  "If the predicate is truthy, show the el. Otherwise, hide it."
   (fn [node]
     (if pred
-      ((remove-class "hidden") node)
-      ((add-class "hidden") node))))
+      (at node (remove-class "hidden"))
+      (at node (add-class "hidden")))))
 
 (defn if-hide [pred]
-  "If the predicate is truthy, hide the node. Otherwise, show it."
+  "If the predicate is truthy, hide the el. Otherwise, show it."
   (fn [node]
     (if pred
-      ((add-class "hidden") node)
-      ((remove-class "hidden") node))))
+      (at node (add-class "hidden"))
+      (at node (remove-class "hidden")))))
 
 (defn if-transform
   "If the predicate is truthy, run the given transform. Optionally takes a
-  transform to be run if the predicate is falsy."
-  ([pred trans] (fn [node]
+  transform to be run if the predicate is falsey."
+  ([pred trans] (fn [el]
                   (if pred
-                    (trans node)
-                    node)))
-  ([pred t-trans nil-trans] (fn [node]
+                    (trans el)
+                    el)))
+  ([pred t-trans nil-trans] (fn [el]
                               (if pred
-                                (t-trans node)
-                                (nil-trans node)))))
+                                (t-trans el)
+                                (nil-trans el)))))
 
 (deftemplate base-template "templates/base.html"
   [{:keys [page flash identity]}]
   [:#page] (content page)
   [:.flash] (content flash)
-  [:.auth :.identity :.name] (when identity
+  [:.auth :.identity :.name] (if-transform identity
                                (content (:current identity)))
   [:.auth :.logout] (if-show identity)
   [:.auth :.login] (if-hide identity))

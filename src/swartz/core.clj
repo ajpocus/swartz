@@ -46,8 +46,7 @@
                                               user))
                             :workflows [(workflows/interactive-form)]})
       (wrap-defaults site-defaults)
-      ware/log-request
-      site))
+      (site)))
 
 (defn -main
   "Start a ring/jetty server."

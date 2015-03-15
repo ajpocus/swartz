@@ -1,6 +1,8 @@
 (ns swartz.middleware
   (:require [clojure.tools.logging :as log]
-            [clojure.string :as str]))
+            [clojure.string :as str]
+            [clojure.pprint :refer [pprint]]
+            [cemerick.friend :as friend]))
 
 (defn log-request [handler]
   "Logs requests in the following form: request-method \"uri\" status-code"
