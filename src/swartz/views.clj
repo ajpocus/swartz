@@ -1,57 +1,35 @@
 (ns swartz.views
   (:require [ring.util.anti-forgery :refer [anti-forgery-field]]
             [cemerick.friend :as friend])
-  (:use net.cgrand.enlive-html))
-
-(deftemplate base-template "templates/base.html"
-  [{:keys [page flash identity]}]
-  [:#page] (content page)
-  [:.flash] (content flash)
-  [:.auth :.identity :.name] (fn [el]
-                               (if (nil? identity)
-                                 el
-                                 ((content (:current identity)) el)))
-  [:.auth :.logout] (fn [el]
-                      (if (nil? identity)
-                        el
-                        ((remove-class "hidden") el)))
-  [:.auth :.login] (fn [el]
-                     (if (nil? identity)
-                       el
-                       ((add-class "hidden") el))))
+  (:use net.cgrand.enlive-html
+        swartz.helpers))
 
 (defsnippet home-page "templates/home.html"
   [:.home]
-  [])
+  [{:keys [identity flash]}])
 
 (defsnippet login-form "templates/login.html"
   [:.login]
-  []
+  [{:keys [identity flash]}]
   [:.anti-forgery-field] (html-content (anti-forgery-field)))
 
 (defsnippet signup-form "templates/signup.html"
   [:.signup]
-  []
+  [{:keys [identity flash]}]
   [:.anti-forgery-field] (html-content (anti-forgery-field)))
 
 (defsnippet post-snippet "templates/post-snippet.html"
   [:.post]
   [{:keys [post]}]
   [:a.title] (content (:title post))
-  [:a.title] (fn [el]
-               (let [url (:url post)]
-                 ((content (:title post)) el)
-                 (if (nil? url)
-                   ((set-attr :href (str "/posts/" (:id post))) el)
-                   ((set-attr :href url) el)))))
+  [:a.title] (if-transform (:url post)
+                           (set-attr :href (str "/posts/" (:id post)))
+                           (set-attr :href (:url post))))
 
 (defsnippet post-list "templates/post-list.html"
   [:.post-list]
   [{:keys [posts identity]}]
-  [:a.new-post] (fn [el]
-                  (if (nil? identity)
-                    el
-                    ((remove-class "hidden") el)))
+  [:a.new-post] (if-show identity)
   [:ol.posts] (content (map (fn [post]
                               (post-snippet {:post post}))
                             posts)))
@@ -73,27 +51,18 @@
   [:.post]
   [{:keys [post identity]}]
   [:a.title] (content (:title post))
-  [:a.title] (fn [el]
-               (let [url (:url post)]
-                 (if (nil? url)
-                   ((set-attr :href (str "/posts/" (:id post))) el)
-                   ((set-attr :href url) el))))
+  [:a.title] (if-transform (:url post)
+                           (set-attr :href (str "/posts/" (:id post)))
+                           (set-attr :href (:url post)))
   [:.content] (content (:content post))
-  [:.new-note :form.note] (set-attr
-                                 :action
-                                 (str "/posts/" (:id post) "/notes"))
-  [:.new-note] (fn [el]
-                    (if (nil? identity)
-                      ((add-class "hidden") el)
-                      el))
-  [:.no-note] (fn [el]
-                   (if (nil? identity)
-                     ((remove-class "hidden") el)
-                     el))
+  [:.new-note :form.note] (set-attr :action
+                                    (str "/posts/" (:id post) "/notes"))
+  [:.new-note] (if-show identity)
+  [:.no-note] (if-hide identity)
   [:.post :.notes] (append (note-list {:notes (:note post)}))
   [:.anti-forgery-field] (html-content (anti-forgery-field)))
 
 (defsnippet new-post-form "templates/new-post-form.html"
   [:.new-post]
-  []
+  [{:keys [identity flash]}]
   [:.anti-forgery-field] (html-content (anti-forgery-field)))

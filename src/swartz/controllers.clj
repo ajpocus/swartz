@@ -30,11 +30,10 @@
       (assoc-in (redirect "/signup")
                 [:session :_flash]
                 "That username is taken.")
-      (do
-        (let [user (insert user
-                           (values {:username username
-                                    :password (creds/hash-bcrypt password)}))]
-          (friend/merge-authentication (redirect "/") (create-user user)))))))
+      (let [user (insert user
+                         (values {:username username
+                                  :password (creds/hash-bcrypt password)}))]
+        (friend/merge-authentication (redirect "/") (create-user user))))))
 
 (defn get-posts [req]
   (let [posts (select post)
