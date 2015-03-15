@@ -6,17 +6,17 @@
                      :user "austin"
                      :password "notasecurepass"}))
 
-(declare users posts comments)
+(declare user post comment)
 
-(defentity users
-  (has-many posts {:fk :user_id}))
+(defentity user
+  (has-many post))
 
-(defentity posts
-  (belongs-to users {:fk :user_id})
-  (has-many comments {:fk :post_id}))
+(defentity post
+  (belongs-to user)
+  (has-many comment))
 
-(defentity comments
-  (belongs-to users {:fk :user_id})
-  (belongs-to posts {:fk :post_id})
-  (belongs-to comments {:fk :comment_id})
-  (has-many comments {:fk :comment_id}))
+(defentity comment
+  (belongs-to user)
+  (belongs-to post)
+  (belongs-to comment)
+  (has-many comment))

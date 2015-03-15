@@ -24,7 +24,7 @@
 
 (defn post-signup [req]
   (let [{:keys [username password]} (:params req)]
-    (if (> (:count (first (select users
+    (if (> (:count (first (select user
                                   (aggregate (count :*) :count)
                                   (where {:username username}))))
            0)
@@ -32,13 +32,13 @@
                 [:session :_flash]
                 "That username is taken.")
       (do
-        (let [user (insert users
+        (let [user (insert user
                            (values {:username username
                                     :password (creds/hash-bcrypt password)}))]
           (friend/merge-authentication (redirect "/") (create-user user)))))))
 
 (defn get-posts [req]
-  (let [posts (select posts)]
+  (let [posts (select post)]
     (views/base-template
      {:page (views/post-list {:posts posts})
       :identity (friend/identity req)})))
@@ -48,18 +48,18 @@
 
 (defn create-post [req]
   (let [params (:params req)
-        post (insert posts (values {:title (:title params)
-                                    :url (if (empty? (:url params))
-                                           nil
-                                           (:url params))
-                                    :content (:content params)}))]
+        post (insert post (values {:title (:title params)
+                                   :url (if (empty? (:url params))
+                                          nil
+                                          (:url params))
+                                   :content (:content params)}))]
     (redirect (str "/posts/" (:id post)))))
 
 (defn get-post [req]
   (let [post-id (Integer/parseInt (:id (:params req)))
-        post (first (select posts
-                            (with comments
-                                  (with users (fields :username)))
+        post (first (select post
+                            (with comment
+                                  (with user (fields :username)))
                             (where {:id post-id})))
         identity (friend/identity req)]
     (views/base-template
@@ -70,10 +70,10 @@
 (defn create-comment [req]
   (let [params (:params req)
         post-id (Integer/parseInt (:id params))
-        post (first (select posts (where {:id post-id})))
+        post (first (select post (where {:id post-id})))
         identity (friend/identity req)
-        user (first (select users (where {:username (:current identity)})))]
-    (insert comments (values {:content (:content params)
-                              :post_id post-id
-                              :user_id (:id user)}))
+        user (first (select user (where {:username (:current identity)})))]
+    (insert comment (values {:content (:content params)
+                             :post_id post-id
+                             :user_id (:id user)}))
     (redirect (str "/posts/" post-id))))

@@ -4,27 +4,27 @@
   (:use (lobos [migration :only [defmigration]] core schema
                config helpers)))
 
-(defmigration add-users-table
+(defmigration add-user-table
   (up [] (create
-          (tbl :users
+          (tbl :user
                (varchar :username 255 :unique)
                (varchar :password 255))))
-  (down [] (drop (table :users))))
+  (down [] (drop (table :user))))
 
-(defmigration add-posts-table
+(defmigration add-post-table
   (up [] (create
-          (tbl :posts
+          (tbl :post
                (varchar :title 255)
                (varchar :url 255)
                (text :content)
-               (refer-to :users))))
-  (down [] (drop (table :posts))))
+               (refer-to :user))))
+  (down [] (drop (table :post))))
 
-(defmigration add-comments-table
+(defmigration add-comment-table
   (up [] (create
-          (tbl :comments
+          (tbl :comment
                (text :content)
-               (refer-to :users)
-               (refer-to :posts)
-               (refer-to :comments))))
-  (down [] (drop (table :comments))))
+               (refer-to :user)
+               (refer-to :post)
+               (refer-to :comment))))
+  (down [] (drop (table :comment))))

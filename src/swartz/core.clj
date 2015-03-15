@@ -32,16 +32,16 @@
   (resources "/")
   (not-found "Page not found."))
 
-(defn- get-users-map []
+(defn- get-user-map []
   (into {} (map (fn [u]
                   [(:username u) u])
-                (select users))))
+                (select user))))
 
 (def handler
   (-> app-routes
       (friend/authenticate {:credential-fn (fn [user]
                                              (creds/bcrypt-credential-fn
-                                              (get-users-map)
+                                              (get-user-map)
                                               user))
                             :workflows [(workflows/interactive-form)]})
       (wrap-defaults site-defaults)
