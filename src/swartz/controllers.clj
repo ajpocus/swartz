@@ -38,10 +38,12 @@
           (friend/merge-authentication (redirect "/") (create-user user)))))))
 
 (defn get-posts [req]
-  (let [posts (select post)]
+  (let [posts (select post)
+        identity (friend/identity req)]
     (views/base-template
-     {:page (views/post-list {:posts posts})
-      :identity (friend/identity req)})))
+     {:page (views/post-list {:posts posts
+                              :identity identity})
+      :identity identity})))
 
 (defn new-post [req]
   (views/base-template {:page (views/new-post-form)}))
@@ -58,7 +60,7 @@
 (defn get-post [req]
   (let [post-id (Integer/parseInt (:id (:params req)))
         post (first (select post
-                            (with comment
+                            (with note
                                   (with user (fields :username)))
                             (where {:id post-id})))
         identity (friend/identity req)]
@@ -67,13 +69,13 @@
                               :identity identity})
       :identity identity})))
 
-(defn create-comment [req]
+(defn create-note [req]
   (let [params (:params req)
         post-id (Integer/parseInt (:id params))
         post (first (select post (where {:id post-id})))
         identity (friend/identity req)
         user (first (select user (where {:username (:current identity)})))]
-    (insert comment (values {:content (:content params)
-                             :post_id post-id
-                             :user_id (:id user)}))
+    (insert note (values {:content (:content params)
+                          :post_id post-id
+                          :user_id (:id user)}))
     (redirect (str "/posts/" post-id))))

@@ -47,23 +47,27 @@
 
 (defsnippet post-list "templates/post-list.html"
   [:.post-list]
-  [{:keys [posts]}]
-  [:.post-list] (content (map (fn [post]
-                                     (post-snippet {:post post}))
-                                   posts)))
+  [{:keys [posts identity]}]
+  [:a.new-post] (fn [el]
+                  (if (nil? identity)
+                    el
+                    ((remove-class "hidden") el)))
+  [:ol.posts] (content (map (fn [post]
+                              (post-snippet {:post post}))
+                            posts)))
 
-(defsnippet comment-snippet "templates/comment-snippet.html"
-  [:.comment]
-  [{:keys [comment]}]
-  [:.content] (content (:content comment))
-  [:.user] (append (:username comment)))
+(defsnippet note-snippet "templates/note-snippet.html"
+  [:.note]
+  [{:keys [note]}]
+  [:.content] (content (:content note))
+  [:.user] (append (:username note)))
 
-(defsnippet comment-list "templates/comment-list.html"
-  [:.comment-list]
-  [{:keys [comments]}]
-  [:.comment-list] (content (map (fn [comment]
-                                        (comment-snippet {:comment comment}))
-                                      comments)))
+(defsnippet note-list "templates/note-list.html"
+  [:.note-list]
+  [{:keys [notes]}]
+  [:.note-list] (content (map (fn [note]
+                                        (note-snippet {:note note}))
+                                      notes)))
 
 (defsnippet post-page "templates/show-post.html"
   [:.post]
@@ -75,18 +79,18 @@
                    ((set-attr :href (str "/posts/" (:id post))) el)
                    ((set-attr :href url) el))))
   [:.content] (content (:content post))
-  [:.new-comment :form.comment] (set-attr
+  [:.new-note :form.note] (set-attr
                                  :action
-                                 (str "/posts/" (:id post) "/comments"))
-  [:.new-comment] (fn [el]
+                                 (str "/posts/" (:id post) "/notes"))
+  [:.new-note] (fn [el]
                     (if (nil? identity)
                       ((add-class "hidden") el)
                       el))
-  [:.no-comment] (fn [el]
+  [:.no-note] (fn [el]
                    (if (nil? identity)
                      ((remove-class "hidden") el)
                      el))
-  [:.post :.comments] (append (comment-list {:comments (:comments post)}))
+  [:.post :.notes] (append (note-list {:notes (:note post)}))
   [:.anti-forgery-field] (html-content (anti-forgery-field)))
 
 (defsnippet new-post-form "templates/new-post-form.html"

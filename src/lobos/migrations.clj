@@ -20,11 +20,11 @@
                (refer-to :user))))
   (down [] (drop (table :post))))
 
-(defmigration add-comment-table
+(defmigration add-note-table
   (up [] (create
-          (tbl :comment
+          (tbl :note
                (text :content)
                (refer-to :user)
                (refer-to :post)
-               (refer-to :comment))))
-  (down [] (drop (table :comment))))
+               (refer-to :note))))
+  (down [] (drop (table :note))))
