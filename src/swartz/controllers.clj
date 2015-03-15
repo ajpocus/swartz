@@ -4,7 +4,8 @@
             [cemerick.friend.credentials :as creds]
             [swartz.views :as views])
   (:use korma.core
-        swartz.models))
+        swartz.models
+        swartz.helpers))
 
 (defn- create-user [{:keys [username password]}]
   {:identity username
@@ -12,15 +13,13 @@
    :roles #{::user}})
 
 (defn get-homepage [req]
-  (views/base-template {:page (views/home-page)
-                        :identity (friend/identity req)}))
+  (wrap-view req (views/home-page)))
 
 (defn get-login [req]
-  (views/base-template {:page (views/login-form)}))
+  (wrap-view req (views/login-form)))
 
 (defn get-signup [req]
-  (views/base-template {:page (views/signup-form)
-                        :flash (:flash req)}))
+  (wrap-view req (views/signup-form)))
 
 (defn post-signup [req]
   (let [{:keys [username password]} (:params req)]
@@ -40,13 +39,10 @@
 (defn get-posts [req]
   (let [posts (select post)
         identity (friend/identity req)]
-    (views/base-template
-     {:page (views/post-list {:posts posts
-                              :identity identity})
-      :identity identity})))
+    (wrap-view req (views/post-list {:posts posts}))))
 
 (defn new-post [req]
-  (views/base-template {:page (views/new-post-form)}))
+  (wrap-view req (views/new-post-form)))
 
 (defn create-post [req]
   (let [params (:params req)
@@ -64,10 +60,7 @@
                                   (with user (fields :username)))
                             (where {:id post-id})))
         identity (friend/identity req)]
-    (views/base-template
-     {:page (views/post-page {:post post
-                              :identity identity})
-      :identity identity})))
+    (wrap-view req (views/post-page {:post post}))))
 
 (defn create-note [req]
   (let [params (:params req)
