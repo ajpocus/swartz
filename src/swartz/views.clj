@@ -56,7 +56,7 @@
   [:.comment]
   [{:keys [comment]}]
   [:.content] (content (:content comment))
-  [:.user] (append (:username (:user comment))))
+  [:.user] (append (:username comment)))
 
 (defsnippet comment-list "templates/comment-list.html"
   [:.comment-list]

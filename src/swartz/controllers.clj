@@ -58,7 +58,8 @@
 (defn get-post [req]
   (let [post-id (Integer/parseInt (:id (:params req)))
         post (first (select posts
-                            (with comments)
+                            (with comments
+                                  (with users (fields :username)))
                             (where {:id post-id})))
         identity (friend/identity req)]
     (views/base-template
