@@ -23,8 +23,8 @@
   [{:keys [post]}]
   [:a.title] (content (:title post))
   [:a.title] (if-transform (:url post)
-                           (set-attr :href (str "/posts/" (:id post)))
-                           (set-attr :href (:url post))))
+                           (set-attr :href (:url post))
+                           (set-attr :href (str "/posts/" (:id post)))))
 
 (defsnippet post-list "templates/post-list.html"
   [:.post-list]
@@ -52,8 +52,8 @@
   [{:keys [post identity]}]
   [:a.title] (content (:title post))
   [:a.title] (if-transform (:url post)
-                           (set-attr :href (str "/posts/" (:id post)))
-                           (set-attr :href (:url post)))
+                           (set-attr :href (:url post))
+                           (set-attr :href (str "/posts/" (:id post))))
   [:.content] (content (:content post))
   [:.new-note :form.note] (set-attr :action
                                     (str "/posts/" (:id post) "/notes"))
