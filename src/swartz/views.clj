@@ -84,7 +84,8 @@
   [:.post :.user] (content (:username post))
   [:.note :.content] (content (:content note))
   [:.note :.user] (content (:username note))
-  [:.new-note] (new-note-form)
+  [:.new-note] (do-> (if-show identity)
+                     (content (new-note-form)))
   [:.notes] (content (map (fn [note]
                             (note-snippet {:note note}))
                           (:notes note))))

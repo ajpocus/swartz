@@ -3,6 +3,7 @@
             [cemerick.friend :as friend]
             [cemerick.friend.credentials :as creds]
             [clojure.tools.logging :as log]
+            [clojure.pprint :refer [pprint]]
             [swartz.views :as views])
   (:use korma.core
         swartz.models
@@ -80,12 +81,12 @@
   (let [params (:params req)
         post-id (Integer/parseInt (:post_id params))
         note-id (Integer/parseInt (:note_id params))
-        post (select post
-                     (with user (fields :username))
-                     (where {:id post-id}))
-        note (select note
-                     (with user (fields :username))
-                     (where {:id note-id}))]
-    (println post)
-    (println note)
-    (wrap-view views/show-note {:post post :note note})))
+        post (first (select post
+                            (with user (fields :username))
+                            (where {:id post-id})))
+        note (first (select note
+                            (with user (fields :username))
+                            (where {:id note-id})))]
+    (pprint post)
+    (pprint note)
+    (wrap-view req views/show-note {:post post :note note})))
