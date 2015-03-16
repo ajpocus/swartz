@@ -1,44 +1,35 @@
 (ns swartz.helpers
-  (:require [cemerick.friend :as friend])
+  (:require [cemerick.friend :as friend]
+            [clojure.pprint :refer [pprint]])
   (:use net.cgrand.enlive-html))
 
-(defmacro wrap-view [req snippet]
-  "Wraps an enlive snippet with a base template, and includes common params."
-  (let [identity (friend/identity req)
-        flash (:flash req)
-        base-params (or (second snippet) {})
-        params (assoc base-params
-                      :identity (friend/identity req)
-                      :flash flash)]
-    `(base-template {:page (~(first snippet) ~params)
-                           :identity ~identity
-                           :flash ~flash})))
+(def not-nil? (complement nil?))
 
 (defn if-show [pred]
-  "If the predicate is truthy, show the el. Otherwise, hide it."
+  "If the predicate is truthy, show the node. Otherwise, hide it."
   (fn [node]
     (if pred
-      (at node (remove-class "hidden"))
-      (at node (add-class "hidden")))))
+      ((remove-class "hidden") node)
+      ((add-class "hidden") node))))
 
 (defn if-hide [pred]
-  "If the predicate is truthy, hide the el. Otherwise, show it."
+  "If the predicate is truthy, hide the node. Otherwise, show it."
   (fn [node]
     (if pred
-      (at node (add-class "hidden"))
-      (at node (remove-class "hidden")))))
+      ((add-class "hidden") node)
+      ((remove-class "hidden") node))))
 
 (defn if-transform
   "If the predicate is truthy, run the given transform. Optionally takes a
   transform to be run if the predicate is falsey."
-  ([pred trans] (fn [el]
+  ([pred trans] (fn [node]
                   (if pred
-                    (trans el)
-                    el)))
-  ([pred t-trans nil-trans] (fn [el]
+                    (trans node)
+                    node)))
+  ([pred t-trans nil-trans] (fn [node]
                               (if pred
-                                (t-trans el)
-                                (nil-trans el)))))
+                                (t-trans node)
+                                (nil-trans node)))))
 
 (deftemplate base-template "templates/base.html"
   [{:keys [page flash identity]}]
@@ -48,3 +39,16 @@
                                (content (:current identity)))
   [:.auth :.logout] (if-show identity)
   [:.auth :.login] (if-hide identity))
+
+(defn wrap-view
+  "Wraps an enlive snippet with a base template, and includes common params."
+  ([req snippet-fn]
+   (wrap-view req snippet-fn {}))
+  ([req snippet-fn params]
+   (let [flash (:flash req)
+         identity (friend/identity req)]
+     (base-template {:page (snippet-fn (assoc params
+                                              :identity identity
+                                              :flash flash))
+                     :identity identity
+                     :flash flash}))))

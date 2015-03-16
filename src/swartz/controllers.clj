@@ -15,13 +15,13 @@
 
 (defn get-homepage [req]
   (log/info (friend/identity req))
-  (wrap-view req (views/home-page)))
+  (wrap-view req views/home-page))
 
 (defn get-login [req]
-  (wrap-view req (views/login-form)))
+  (wrap-view req views/login-form))
 
 (defn get-signup [req]
-  (wrap-view req (views/signup-form)))
+  (wrap-view req views/signup-form))
 
 (defn post-signup [req]
   (let [{:keys [username password]} (:params req)]
@@ -40,10 +40,10 @@
 (defn get-posts [req]
   (let [posts (select post)
         identity (friend/identity req)]
-    (wrap-view req (views/post-list {:posts posts}))))
+    (wrap-view req views/post-list {:posts posts})))
 
 (defn new-post [req]
-  (wrap-view req (views/new-post-form)))
+  (wrap-view req views/new-post-form))
 
 (defn create-post [req]
   (let [params (:params req)
@@ -61,7 +61,7 @@
                                   (with user (fields :username)))
                             (where {:id post-id})))
         identity (friend/identity req)]
-    (wrap-view req (views/post-page {:post post}))))
+    (wrap-view req views/post-page {:post post})))
 
 (defn create-note [req]
   (let [params (:params req)
