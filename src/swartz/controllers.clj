@@ -80,6 +80,12 @@
   (let [params (:params req)
         post-id (Integer/parseInt (:post_id params))
         note-id (Integer/parseInt (:note_id params))
-        post (select post (where {:id post-id}))
-        note (select note (where {:id note-id}))]
+        post (select post
+                     (with user (fields :username))
+                     (where {:id post-id}))
+        note (select note
+                     (with user (fields :username))
+                     (where {:id note-id}))]
+    (println post)
+    (println note)
     (wrap-view views/show-note {:post post :note note})))

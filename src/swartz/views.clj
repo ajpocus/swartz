@@ -51,6 +51,11 @@
                                         (note-snippet {:note note}))
                                       notes)))
 
+(defsnippet new-note-form "templates/new-note-form.html"
+  [:form.note]
+  []
+  [:.anti-forgery-field] (html-content (anti-forgery-field)))
+
 (defsnippet post-page "templates/show-post.html"
   [:.post]
   [{:keys [post identity]}]
@@ -61,7 +66,8 @@
   [:.content] (content (:content post))
   [:.new-note :form.note] (set-attr :action
                                     (str "/posts/" (:id post) "/notes"))
-  [:.new-note] (if-show identity)
+  [:.new-note] (do-> (if-show identity)
+                     (content (new-note-form)))
   [:.no-note] (if-hide identity)
   [:.post :.notes] (append (note-list {:notes (:note post)}))
   [:.anti-forgery-field] (html-content (anti-forgery-field)))
@@ -74,4 +80,11 @@
 (defsnippet show-note "templates/show-note.html"
   [:.note]
   [{:keys [identity post note]}]
-  )
+  [:.post :.title] (content (:title post))
+  [:.post :.user] (content (:username post))
+  [:.note :.content] (content (:content note))
+  [:.note :.user] (content (:username note))
+  [:.new-note] (new-note-form)
+  [:.notes] (content (map (fn [note]
+                            (note-snippet {:note note}))
+                          (:notes note))))
