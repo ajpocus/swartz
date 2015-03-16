@@ -38,7 +38,11 @@
   [:.note]
   [{:keys [note]}]
   [:.content] (content (:content note))
-  [:.user] (append (:username note)))
+  [:.user] (append (:username note))
+  [:.reply] (set-attr :href (str "/posts/"
+                                 (:post_id note)
+                                 "/notes/"
+                                 (:id note))))
 
 (defsnippet note-list "templates/note-list.html"
   [:.note-list]

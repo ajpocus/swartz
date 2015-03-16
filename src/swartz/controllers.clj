@@ -47,6 +47,8 @@
 
 (defn create-post [req]
   (let [params (:params req)
+        identity (friend/identity req)
+        user-id (:id (first (:authentications identity)))
         post (insert post (values {:title (:title params)
                                    :url (if (empty? (:url params))
                                           nil
@@ -68,8 +70,8 @@
         post-id (Integer/parseInt (:id params))
         post (first (select post (where {:id post-id})))
         identity (friend/identity req)
-        user (first (select user (where {:username (:current identity)})))]
+        user-id(:id (first (:authentications identity)))]
     (insert note (values {:content (:content params)
                           :post_id post-id
-                          :user_id (:id user)}))
+                          :user_id user-id}))
     (redirect (str "/posts/" post-id))))
