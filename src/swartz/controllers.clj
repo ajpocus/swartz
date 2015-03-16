@@ -67,11 +67,19 @@
 
 (defn create-note [req]
   (let [params (:params req)
-        post-id (Integer/parseInt (:id params))
+        post-id (Integer/parseInt (:post_id params))
         post (first (select post (where {:id post-id})))
         identity (friend/identity req)
-        user-id(:id (first (:authentications identity)))]
+        user-id (:id (first (:authentications identity)))]
     (insert note (values {:content (:content params)
                           :post_id post-id
                           :user_id user-id}))
     (redirect (str "/posts/" post-id))))
+
+(defn get-note [req]
+  (let [params (:params req)
+        post-id (Integer/parseInt (:post_id params))
+        note-id (Integer/parseInt (:note_id params))
+        post (select post (where {:id post-id}))
+        note (select note (where {:id note-id}))]
+    (wrap-view views/show-note {:post post :note note})))

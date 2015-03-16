@@ -27,8 +27,9 @@
   (POST "/posts" req (friend/authenticated (ctrl/create-post req)))
   (GET "/posts/:id" req (ctrl/get-post req))
 
-  (POST "/posts/:id/notes" req
+  (POST "/posts/:post_id/notes" req
         (friend/authenticated (ctrl/create-note req)))
+  (GET "/posts/:post_id/notes/:note_id" req (ctrl/get-note req))
 
   (resources "/")
   (not-found "Page not found."))

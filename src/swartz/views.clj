@@ -70,3 +70,8 @@
   [:.new-post]
   [{:keys [identity flash]}]
   [:.anti-forgery-field] (html-content (anti-forgery-field)))
+
+(defsnippet show-note "templates/show-note.html"
+  [:.note]
+  [{:keys [identity post note]}]
+  )
