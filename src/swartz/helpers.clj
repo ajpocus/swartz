@@ -1,6 +1,8 @@
 (ns swartz.helpers
   (:require [cemerick.friend :as friend]
-            [clojure.pprint :refer [pprint]])
+            [clj-time.core :as t]
+            [clj-time.coerce :refer [from-sql-time]]
+            )
   (:use net.cgrand.enlive-html))
 
 (def not-nil? (complement nil?))
@@ -52,3 +54,25 @@
                                               :flash flash))
                      :identity identity
                      :flash flash}))))
+
+(defn time-elapsed [sql-timestamp]
+  "Returns a string describing how long ago the timestamp is."
+  (let [dt (from-sql-time sql-timestamp)
+        now (t/now)
+        interval (t/interval dt now)
+        days (t/in-days interval)
+        hours (t/in-hours interval)
+        minutes (t/in-minutes interval)]
+    (if (not (zero? days))
+      (if (= days 1)
+        "1 day ago"
+        (str days " days ago"))
+      (if (not (zero? hours))
+        (if (= hours 1)
+          "1 hour ago"
+          (str hours " hours ago"))
+        (if (not (zero? minutes))
+          (if (= minutes 1)
+            "1 minute ago"
+            (str minutes " minutes ago"))
+          "1 minute ago")))))

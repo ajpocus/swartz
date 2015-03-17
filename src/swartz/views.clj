@@ -21,10 +21,12 @@
 (defsnippet post-snippet "templates/post-snippet.html"
   [:.post]
   [{:keys [post]}]
-  [:a.title] (content (:title post))
-  [:a.title] (if-transform (:url post)
-                           (set-attr :href (:url post))
-                           (set-attr :href (str "/posts/" (:id post)))))
+  [:a.title] (do-> (content (:title post))
+                   (if-transform (:url post)
+                                 (set-attr :href (:url post))
+                                 (set-attr :href (str "/posts/" (:id post)))))
+  [:.username] (content (:username post))
+  [:.timestamp] (content (time-elapsed (:created_on post))))
 
 (defsnippet post-list "templates/post-list.html"
   [:.post-list]
@@ -81,9 +83,10 @@
   [:.note]
   [{:keys [identity post note]}]
   [:.post :.title] (content (:title post))
-  [:.post :.user] (content (:username post))
+  [:.post :.user] (content (str "submitted by " (:username post)))
   [:.note :.content] (content (:content note))
   [:.note :.user] (content (:username note))
+  [:.note :.timestamp] (content (time-elapsed (:created_on note)))
   [:.new-note] (do-> (if-show identity)
                      (content (new-note-form)))
   [:.notes] (content (map (fn [note]

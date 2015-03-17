@@ -39,7 +39,7 @@
         (friend/merge-authentication (redirect "/") (create-user user))))))
 
 (defn get-posts [req]
-  (let [posts (select post)
+  (let [posts (select post (with user (fields :username)))
         identity (friend/identity req)]
     (wrap-view req views/post-list {:posts posts})))
 
@@ -49,12 +49,13 @@
 (defn create-post [req]
   (let [params (:params req)
         identity (friend/identity req)
-        user-id (:id (first (:authentications identity)))
+        user (first (select user (where {:username (:current identity)})))
         post (insert post (values {:title (:title params)
                                    :url (if (empty? (:url params))
                                           nil
                                           (:url params))
-                                   :content (:content params)}))]
+                                   :content (:content params)
+                                   :user_id (:id user)}))]
     (redirect (str "/posts/" (:id post)))))
 
 (defn get-post [req]
@@ -87,6 +88,4 @@
         note (first (select note
                             (with user (fields :username))
                             (where {:id note-id})))]
-    (pprint post)
-    (pprint note)
     (wrap-view req views/show-note {:post post :note note})))
