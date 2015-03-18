@@ -72,11 +72,15 @@
 (defn create-note [req]
   (let [params (:params req)
         post-id (Integer/parseInt (:post_id params))
+        note-id (if (empty? (:note_id params))
+                  nil
+                  (Integer/parseInt (:note_id params)))
         post (first (select post (where {:id post-id})))
         identity (friend/identity req)
         user (first (select user (where {:username (:current identity)})))]
     (insert note (values {:content (:content params)
                           :post_id post-id
+                          :note_id note-id
                           :user_id (:id user)}))
     (redirect (str "/posts/" post-id))))
 

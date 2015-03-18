@@ -91,6 +91,8 @@
   [:.note :.timestamp] (content (time-elapsed (:created_on note)))
   [:.new-note] (do-> (if-show identity)
                      (content (new-note-form)))
+  [:form.note] (set-attr :action (str "/posts/" (:id post) "/notes"))
+  [:form.note [:input (attr= :name "note_id")]] (set-attr :value (:id note))
   [:.notes] (content (map (fn [note]
                             (note-snippet {:note note}))
                           (:notes note))))
