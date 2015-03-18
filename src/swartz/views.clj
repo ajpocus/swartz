@@ -27,9 +27,8 @@
                                  (set-attr :href (str "/posts/" (:id post)))))
   [:.username] (content (:username post))
   [:.timestamp] (content (time-elapsed (:created_on post)))
-  [:.notes] (content (str (count (:notes post)) (if (= (count (:notes post)) 1)
-                                                  " note"
-                                                  " notes"))))
+  [:.notes] (do-> (set-attr :href (str "/posts/" (:id post)))
+                  (content (note-count post))))
 
 (defsnippet post-list "templates/post-list.html"
   [:.post-list]
@@ -71,7 +70,7 @@
   [:.content] (content (:content post))
   [:.new-note] (do-> (if-show identity)
                      (content (new-note-form)))
-  [:.new-note :form.note] (set-attr "action"
+  [:.new-note :form.note] (set-attr :action
                                     (str "/posts/" (:id post) "/notes"))
   [:.no-note] (if-hide identity)
   [:.post :.notes] (append (note-list {:notes (:note post)}))

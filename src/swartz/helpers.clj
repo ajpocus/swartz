@@ -76,3 +76,9 @@
             "1 minute ago"
             (str minutes " minutes ago"))
           "1 minute ago")))))
+
+(defn note-count [post]
+  (let [num-notes (count (:note post))]
+    (str num-notes (if (= num-notes 1)
+                     " note"
+                     " notes"))))
