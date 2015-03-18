@@ -27,8 +27,8 @@
                                  (set-attr :href (str "/posts/" (:id post)))))
   [:.username] (content (:username post))
   [:.timestamp] (content (time-elapsed (:created_on post)))
-  [:.notes] (do-> (set-attr :href (str "/posts/" (:id post)))
-                  (content (note-count post))))
+  [:.comments] (do-> (set-attr :href (str "/posts/" (:id post)))
+                  (content (comment-count post))))
 
 (defsnippet post-list "templates/post-list.html"
   [:.post-list]
@@ -38,25 +38,25 @@
                               (post-snippet {:post post}))
                             posts)))
 
-(defsnippet note-snippet "templates/note-snippet.html"
-  [:.note]
-  [{:keys [note]}]
-  [:.content] (content (:content note))
-  [:.user] (append (:username note))
+(defsnippet comment-snippet "templates/comment-snippet.html"
+  [:.comment]
+  [{:keys [comment]}]
+  [:.content] (content (:content comment))
+  [:.user] (append (:username comment))
   [:.reply] (set-attr :href (str "/posts/"
-                                 (:post_id note)
-                                 "/notes/"
-                                 (:id note))))
+                                 (:post_id comment)
+                                 "/comments/"
+                                 (:id comment))))
 
-(defsnippet note-list "templates/note-list.html"
-  [:.note-list]
-  [{:keys [notes]}]
-  [:.note-list] (content (map (fn [note]
-                                        (note-snippet {:note note}))
-                                      notes)))
+(defsnippet comment-list "templates/comment-list.html"
+  [:.comment-list]
+  [{:keys [comments]}]
+  [:.comment-list] (content (map (fn [comment]
+                                        (comment-snippet {:comment comment}))
+                                      comments)))
 
-(defsnippet new-note-form "templates/new-note-form.html"
-  [:form.note]
+(defsnippet new-comment-form "templates/new-comment-form.html"
+  [:form.comment]
   []
   [:.anti-forgery-field] (html-content (anti-forgery-field)))
 
@@ -68,12 +68,12 @@
                            (set-attr :href (:url post))
                            (set-attr :href (str "/posts/" (:id post))))
   [:.content] (content (:content post))
-  [:.new-note] (do-> (if-show identity)
-                     (content (new-note-form)))
-  [:.new-note :form.note] (set-attr :action
-                                    (str "/posts/" (:id post) "/notes"))
-  [:.no-note] (if-hide identity)
-  [:.post :.notes] (append (note-list {:notes (:note post)}))
+  [:.new-comment] (do-> (if-show identity)
+                     (content (new-comment-form)))
+  [:.new-comment :form.comment] (set-attr :action
+                                    (str "/posts/" (:id post) "/comments"))
+  [:.no-comment] (if-hide identity)
+  [:.post :.comments] (append (comment-list {:comments (:comment post)}))
   [:.anti-forgery-field] (html-content (anti-forgery-field)))
 
 (defsnippet new-post-form "templates/new-post-form.html"
@@ -81,18 +81,18 @@
   [{:keys [identity flash]}]
   [:.anti-forgery-field] (html-content (anti-forgery-field)))
 
-(defsnippet show-note "templates/show-note.html"
-  [:.note]
-  [{:keys [identity post note]}]
+(defsnippet show-comment "templates/show-comment.html"
+  [:.comment]
+  [{:keys [identity post comment]}]
   [:.post :.title] (content (:title post))
   [:.post :.user] (content (str "submitted by " (:username post)))
-  [:.note :.content] (content (:content note))
-  [:.note :.user] (content (:username note))
-  [:.note :.timestamp] (content (time-elapsed (:created_on note)))
-  [:.new-note] (do-> (if-show identity)
-                     (content (new-note-form)))
-  [:form.note] (set-attr :action (str "/posts/" (:id post) "/notes"))
-  [:form.note [:input (attr= :name "note_id")]] (set-attr :value (:id note))
-  [:.notes] (content (map (fn [note]
-                            (note-snippet {:note note}))
-                          (:notes note))))
+  [:.comment :.content] (content (:content comment))
+  [:.comment :.user] (content (:username comment))
+  [:.comment :.timestamp] (content (time-elapsed (:created_on comment)))
+  [:.new-comment] (do-> (if-show identity)
+                     (content (new-comment-form)))
+  [:form.comment] (set-attr :action (str "/posts/" (:id post) "/comments"))
+  [:form.comment [:input (attr= :name "comment_id")]] (set-attr :value (:id comment))
+  [:.comments] (content (map (fn [comment]
+                            (comment-snippet {:comment comment}))
+                          (:comments comment))))

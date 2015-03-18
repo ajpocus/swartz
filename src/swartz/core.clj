@@ -27,10 +27,10 @@
   (POST "/posts" req (friend/authenticated (ctrl/create-post req)))
   (GET "/posts/:id" req (ctrl/get-post req))
 
-  (POST "/posts/:post_id/notes" req
-        (friend/authenticated (ctrl/create-note req)))
-  (GET "/posts/:post_id/notes/:note_id" req
-       (friend/authenticated (ctrl/get-note req)))
+  (POST "/posts/:post_id/comments" req
+        (friend/authenticated (ctrl/create-comment req)))
+  (GET "/posts/:post_id/comments/:comment_id" req
+       (friend/authenticated (ctrl/get-comment req)))
 
   (resources "/")
   (not-found "Page not found."))

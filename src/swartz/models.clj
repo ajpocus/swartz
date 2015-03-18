@@ -6,17 +6,17 @@
                      :user "austin"
                      :password "notasecurepass"}))
 
-(declare user post note)
+(declare user post comment)
 
 (defentity user
   (has-many post))
 
 (defentity post
   (belongs-to user)
-  (has-many note))
+  (has-many comment))
 
-(defentity note
+(defentity comment
   (belongs-to user)
   (belongs-to post)
-  (belongs-to note)
-  (has-many note))
+  (belongs-to comment)
+  (has-many comment))

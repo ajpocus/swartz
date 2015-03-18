@@ -41,7 +41,7 @@
 (defn get-posts [req]
   (let [posts (select post
                       (with user (fields :username))
-                      (with note))
+                      (with comment))
         identity (friend/identity req)]
     (wrap-view req views/post-list {:posts posts})))
 
@@ -63,35 +63,35 @@
 (defn get-post [req]
   (let [post-id (Integer/parseInt (:id (:params req)))
         post (first (select post
-                            (with note
+                            (with comment
                                   (with user (fields :username)))
                             (where {:id post-id})))
         identity (friend/identity req)]
     (wrap-view req views/post-page {:post post})))
 
-(defn create-note [req]
+(defn create-comment [req]
   (let [params (:params req)
         post-id (Integer/parseInt (:post_id params))
-        note-id (if (empty? (:note_id params))
+        comment-id (if (empty? (:comment_id params))
                   nil
-                  (Integer/parseInt (:note_id params)))
+                  (Integer/parseInt (:comment_id params)))
         post (first (select post (where {:id post-id})))
         identity (friend/identity req)
         user (first (select user (where {:username (:current identity)})))]
-    (insert note (values {:content (:content params)
+    (insert comment (values {:content (:content params)
                           :post_id post-id
-                          :note_id note-id
+                          :comment_id comment-id
                           :user_id (:id user)}))
     (redirect (str "/posts/" post-id))))
 
-(defn get-note [req]
+(defn get-comment [req]
   (let [params (:params req)
         post-id (Integer/parseInt (:post_id params))
-        note-id (Integer/parseInt (:note_id params))
+        comment-id (Integer/parseInt (:comment_id params))
         post (first (select post
                             (with user (fields :username))
                             (where {:id post-id})))
-        note (first (select note
+        comment (first (select comment
                             (with user (fields :username))
-                            (where {:id note-id})))]
-    (wrap-view req views/show-note {:post post :note note})))
+                            (where {:id comment-id})))]
+    (wrap-view req views/show-comment {:post post :comment comment})))
