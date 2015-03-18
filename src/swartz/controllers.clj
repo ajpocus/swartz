@@ -39,7 +39,9 @@
         (friend/merge-authentication (redirect "/") (create-user user))))))
 
 (defn get-posts [req]
-  (let [posts (select post (with user (fields :username)))
+  (let [posts (select post
+                      (with user (fields :username))
+                      (with note))
         identity (friend/identity req)]
     (wrap-view req views/post-list {:posts posts})))
 

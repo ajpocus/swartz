@@ -26,7 +26,10 @@
                                  (set-attr :href (:url post))
                                  (set-attr :href (str "/posts/" (:id post)))))
   [:.username] (content (:username post))
-  [:.timestamp] (content (time-elapsed (:created_on post))))
+  [:.timestamp] (content (time-elapsed (:created_on post)))
+  [:.notes] (content (str (count (:notes post)) (if (= (count (:notes post)) 1)
+                                                  " note"
+                                                  " notes"))))
 
 (defsnippet post-list "templates/post-list.html"
   [:.post-list]
