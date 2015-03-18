@@ -74,10 +74,10 @@
         post-id (Integer/parseInt (:post_id params))
         post (first (select post (where {:id post-id})))
         identity (friend/identity req)
-        user-id (:id (first (:authentications identity)))]
+        user (first (select user (where {:username (:current identity)})))]
     (insert note (values {:content (:content params)
                           :post_id post-id
-                          :user_id user-id}))
+                          :user_id (:id user)}))
     (redirect (str "/posts/" post-id))))
 
 (defn get-note [req]

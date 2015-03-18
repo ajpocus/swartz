@@ -69,10 +69,10 @@
                            (set-attr :href (:url post))
                            (set-attr :href (str "/posts/" (:id post))))
   [:.content] (content (:content post))
-  [:.new-note :form.note] (set-attr :action
-                                    (str "/posts/" (:id post) "/notes"))
   [:.new-note] (do-> (if-show identity)
                      (content (new-note-form)))
+  [:.new-note :form.note] (set-attr "action"
+                                    (str "/posts/" (:id post) "/notes"))
   [:.no-note] (if-hide identity)
   [:.post :.notes] (append (note-list {:notes (:note post)}))
   [:.anti-forgery-field] (html-content (anti-forgery-field)))
