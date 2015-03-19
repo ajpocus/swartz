@@ -38,3 +38,8 @@
                     select p.parent_id, c.child_id, p.depth+c.depth+1
                       from comment_closure p, comment_closure c
                     where p.child_id=? and c.parent_id=?" [parent-id id]]))))
+
+(defn get-comment-tree [post]
+  (select comment
+          (join comment-closure (= :comment_closure.child_id :id))
+          (where {:post_id (:id post)})))
