@@ -1,8 +1,7 @@
 (ns swartz.helpers
   (:require [cemerick.friend :as friend]
             [clj-time.core :as t]
-            [clj-time.coerce :refer [from-sql-time]]
-            )
+            [clj-time.coerce :refer [from-sql-time]])
   (:use net.cgrand.enlive-html))
 
 (def not-nil? (complement nil?))
@@ -82,3 +81,4 @@
     (str num-comments (if (= num-comments 1)
                      " comment"
                      " comments"))))
+

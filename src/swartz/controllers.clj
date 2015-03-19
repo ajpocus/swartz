@@ -69,7 +69,7 @@
         identity (friend/identity req)]
     (wrap-view req views/post-page {:post post})))
 
-(defn create-comment [req]
+(defn post-comment [req]
   (let [params (:params req)
         post-id (Integer/parseInt (:post_id params))
         comment-id (if (empty? (:comment_id params))
@@ -78,10 +78,10 @@
         post (first (select post (where {:id post-id})))
         identity (friend/identity req)
         user (first (select user (where {:username (:current identity)})))]
-    (insert comment (values {:content (:content params)
-                          :post_id post-id
-                          :comment_id comment-id
-                          :user_id (:id user)}))
+    (create-comment {:content (:content params)
+                     :post_id post-id
+                     :user_id (:id user)
+                     :parent_id comment-id})
     (redirect (str "/posts/" post-id))))
 
 (defn get-comment [req]

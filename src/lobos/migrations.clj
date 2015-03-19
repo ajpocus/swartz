@@ -24,7 +24,20 @@
   (up [] (create
           (tbl :comment
                (text :content)
+               (text :rank)
                (refer-to :user)
                (refer-to :post)
-               (refer-to :comment))))
+               (integer :parent_id
+                        [:refer :comment :id :on-delete :set-null]))))
   (down [] (drop (table :comment))))
+
+(defmigration add-comment-closure-table
+  (up [] (create
+          (table :comment_closure
+                 (integer :parent_id
+                          [:refer :comment :id :on-delete :set-null])
+                 (integer :child_id
+                          [:refer :comment :id :on-delete :set-null])
+                 (integer :depth)
+                 (primary-key [:parent_id :child_id]))))
+  (down [] (drop (table :comment_closure))))

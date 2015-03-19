@@ -28,7 +28,7 @@
   (GET "/posts/:id" req (ctrl/get-post req))
 
   (POST "/posts/:post_id/comments" req
-        (friend/authenticated (ctrl/create-comment req)))
+        (friend/authenticated (ctrl/post-comment req)))
   (GET "/posts/:post_id/comments/:comment_id" req
        (friend/authenticated (ctrl/get-comment req)))
 
