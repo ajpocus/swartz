@@ -24,15 +24,15 @@
 
 (defn post-signup [req]
   (let [{:keys [username password]} (:params req)]
-    (if (> (count (get-user-by-username username)) 0)
+    (if (> (count (get-user-by-username db username)) 0)
       (assoc-in (redirect "/signup")
                 [:session :_flash]
                 "That username is taken.")
-      (let [user (create-user! username (creds/hash-bcrypt password))]
+      (let [user (create-user! db username (creds/hash-bcrypt password))]
         (friend/merge-authentication (redirect "/") (user-map user))))))
 
 (defn get-posts [req]
-  (let [posts (all-posts)
+  (let [posts (all-posts db)
         identity (friend/identity req)]
     (wrap-view req views/post-list {:posts posts})))
 
@@ -42,8 +42,9 @@
 (defn post-post [req]
   (let [params (:params req)
         identity (friend/identity req)
-        user (first (get-user-by-username (:current identity)))
-        post (create-post! (:title params)
+        user (first (get-user-by-username db (:current identity)))
+        post (create-post! db
+                           (:title params)
                            (if (empty? (:url params))
                              nil
                              (:url params))
@@ -53,7 +54,7 @@
 
 (defn get-post [req]
   (let [post-id (Integer/parseInt (:id (:params req)))
-        post (first (get-post-by-id post-id))
+        post (first (get-post-by-id db post-id))
         identity (friend/identity req)]
     (wrap-view req views/post-page {:post post})))
 
@@ -63,10 +64,11 @@
         parent-id (if (empty? (:parent_id params))
                     nil
                     (Integer/parseInt (:parent_id params)))
-        post (first (get-post-by-id post-id))
+        post (first (get-post-by-id db post-id))
         identity (friend/identity req)
-        user (first (get-user-by-username (:current identity)))]
-    (create-comment! (:content params)
+        user (first (get-user-by-username db (:current identity)))]
+    (create-comment! db
+                     (:content params)
                      (:id user)
                      post-id
                      parent-id)
@@ -76,6 +78,6 @@
   (let [params (:params req)
         post-id (Integer/parseInt (:post_id params))
         comment-id (Integer/parseInt (:comment_id params))
-        post (first (get-post-by-id post-id))
-        comment (first (get-comment-by-id comment-id))]
+        post (first (get-post-by-id db post-id))
+        comment (first (get-comment-by-id db comment-id))]
     (wrap-view req views/show-comment {:post post :comment comment})))
