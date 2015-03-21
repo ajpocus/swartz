@@ -5,4 +5,6 @@
          :subprotocol "postgresql"
          :subname "//localhost:5432/swartz"})
 
-(defqueries "swartz/queries/users.sql")
+(defqueries "swartz/sql/users.sql")
+(defqueries "swartz/sql/posts.sql")
+(defqueries "swartz/sql/comments.sql")

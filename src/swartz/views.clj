@@ -92,7 +92,8 @@
   [:.new-comment] (do-> (if-show identity)
                      (content (new-comment-form)))
   [:form.comment] (set-attr :action (str "/posts/" (:id post) "/comments"))
-  [:form.comment [:input (attr= :name "comment_id")]] (set-attr :value (:id comment))
+  [:form.comment [:input (attr= :name "parent_id")]] (set-attr :value
+                                                               (:id comment))
   [:.comments] (content (map (fn [comment]
                             (comment-snippet {:comment comment}))
                           (:comments comment))))
