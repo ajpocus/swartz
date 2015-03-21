@@ -9,13 +9,15 @@
                  [ring/ring-defaults "0.1.4"]
                  [compojure "1.3.2"]
                  [enlive "1.1.5"]
-                 [korma "0.4.0"]
+                 [yesql "0.4.0"]
                  [org.postgresql/postgresql "9.4-1201-jdbc41"]
-                 [org.clojure/java.jdbc "0.3.5"]
-                 [lobos "1.0.0-beta3"]
+                 [ragtime "0.3.8"]
                  [com.cemerick/friend "0.2.1"]
                  [clj-time "0.9.0"]]
-  :plugins [[lein-ring "0.9.2"]]
+  :plugins [[lein-ring "0.9.2"]
+            [ragtime/ragtime.lein "0.3.8"]]
+  :ragtime {:migrations ragtime.sql.files/migrations
+            :database "jdbc:postgresql:swartz"}
   :ring {:handler swartz.core/handler
          :auto-reload? true
          :auto-refresh true}

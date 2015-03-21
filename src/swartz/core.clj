@@ -10,8 +10,7 @@
                              [credentials :as creds])
             [swartz.controllers :as ctrl]
             [swartz.middleware :as ware])
-  (:use korma.core
-        swartz.models)
+  (:use swartz.models)
   (:gen-class))
 
 (defroutes app-routes
@@ -23,8 +22,8 @@
   (GET "/logout" [] (friend/logout* (redirect "/")))
 
   (GET "/posts" req (ctrl/get-posts req))
-  (GET "/posts/new" req (friend/authenticated (ctrl/new-post req)))
-  (POST "/posts" req (friend/authenticated (ctrl/create-post req)))
+  (GET "/posts/new" req (friend/authenticated (ctrl/get-post-form req)))
+  (POST "/posts" req (friend/authenticated (ctrl/post-post req)))
   (GET "/posts/:id" req (ctrl/get-post req))
 
   (POST "/posts/:post_id/comments" req
@@ -38,7 +37,7 @@
 (defn- get-user-map []
   (into {} (map (fn [u]
                   [(:username u) u])
-                (select user))))
+                (all-users))))
 
 (def handler
   (-> app-routes

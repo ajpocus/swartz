@@ -5,17 +5,15 @@
             [clojure.tools.logging :as log]
             [clojure.pprint :refer [pprint]]
             [swartz.views :as views])
-  (:use korma.core
-        swartz.models
+  (:use swartz.models
         swartz.helpers))
 
-(defn- create-user [{:keys [username password]}]
+(defn- user-map [{:keys [username password]}]
   {:identity username
    :password password
    :roles #{::user}})
 
 (defn get-homepage [req]
-  (log/info (friend/identity req))
   (wrap-view req views/home-page))
 
 (defn get-login [req]
@@ -26,29 +24,22 @@
 
 (defn post-signup [req]
   (let [{:keys [username password]} (:params req)]
-    (if (> (:count (first (select user
-                                  (aggregate (count :*) :count)
-                                  (where {:username username}))))
-           0)
+    (if (> (count (find-user-by-username username)) 0)
       (assoc-in (redirect "/signup")
                 [:session :_flash]
                 "That username is taken.")
-      (let [user (insert user
-                         (values {:username username
-                                  :password (creds/hash-bcrypt password)}))]
-        (friend/merge-authentication (redirect "/") (create-user user))))))
+      (let [user (create-user username (creds/hash-bcrypt password))]
+        (friend/merge-authentication (redirect "/") (user-map user))))))
 
 (defn get-posts [req]
-  (let [posts (select post
-                      (with user (fields :username))
-                      (with comment))
+  (let [posts (all-posts)
         identity (friend/identity req)]
     (wrap-view req views/post-list {:posts posts})))
 
-(defn new-post [req]
+(defn get-post-form [req]
   (wrap-view req views/new-post-form))
 
-(defn create-post [req]
+(defn post-post [req]
   (let [params (:params req)
         identity (friend/identity req)
         user (first (select user (where {:username (:current identity)})))
