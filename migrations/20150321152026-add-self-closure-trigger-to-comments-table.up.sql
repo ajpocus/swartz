@@ -12,5 +12,5 @@ create function add_self_closure() returns trigger as $add_self_closure$
        end;
 $add_self_closure$ language plpgsql;
 
-create trigger self_closure after insert on comments
+create trigger aa_self_closure after insert on comments
        for each row execute procedure add_self_closure();
