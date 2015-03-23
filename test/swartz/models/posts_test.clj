@@ -6,45 +6,36 @@
 
 (use-fixtures :each clean-db)
 
-(def params {:title "test post please ignore"
-             :url "https://i.imgur.com/R1raY.gif"
-             :content "We now return to your regularly scheduled programming."})
-
 (deftest test-create
   (let [user (first (users/find-all test-db))
         user-id (:id user)]
     (testing "Create with URL"
-      (let [post (posts/create<! test-db
-                                 (:title params)
-                                 (:url params)
-                                 nil
-                                 user-id)]
+      (let [params (assoc post-params
+                          :content nil
+                          :user-id user-id)
+            post (create-test-post params)]
         (is (= (:url params) (:url post)))))
     (testing "Create with content"
-      (let [post (posts/create<! test-db
-                                 (:title params)
-                                 nil
-                                 (:content params)
-                                 user-id)]
+      (let [params (assoc post-params
+                          :url nil
+                          :user-id user-id)
+            post (create-test-post params)]
         (is (= (:content params) (:content post)))))
     (testing "Create with no content or URL"
-      (try
-        (posts/create<! test-db
-                        (:title params)
-                        nil
-                        nil
-                        user-id)
-        (catch Exception e
-          (is (= (class e) org.postgresql.util.PSQLException)))
-        (finally
-          (is (= 0 (count (posts/find-all test-db)))))))
+      (let [params (assoc post-params
+                          :url nil
+                          :content nil
+                          :user-id user-id)]
+        (try
+          (create-test-post params)
+          (catch Exception e
+            (is (= (class e) org.postgresql.util.PSQLException)))
+          (finally
+            (is (= 0 (count (posts/find-all test-db))))))))
     (testing "Create with no user id"
       (try
-        (posts/create<! test-db
-                        (:title params)
-                        (:url params)
-                        nil
-                        nil)
+        ;; post-params doesn't have user id by default -- it has to be assoc'd
+        (create-test-post)
         (catch Exception e
           (is (= (class e) org.postgresql.util.PSQLException)))
         (finally
