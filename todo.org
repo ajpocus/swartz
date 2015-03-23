@@ -1,5 +1,9 @@
 * TODO Write tests
 ** TODO Test model functions, make sure queries are right
+*** DONE Test users model
+    CLOSED: [2015-03-22 Sun 20:24]
+*** TODO Test posts model
+*** TODO Test comments model
 ** TODO Test controllers, make sure the right data is coming through
 ** TODO Test views, make sure page renders with the data in place
 ** TODO Check out options for acceptance tests w/ Selenium

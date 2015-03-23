@@ -9,8 +9,8 @@
             (cemerick.friend [workflows :as workflows]
                              [credentials :as creds])
             [swartz.controllers :as ctrl]
-            [swartz.middleware :as ware])
-  (:use swartz.models)
+            [swartz.middleware :as ware]
+            [swartz.models.users :as users])
   (:gen-class))
 
 (defroutes app-routes
@@ -37,7 +37,7 @@
 (defn- get-user-map []
   (into {} (map (fn [u]
                   [(:username u) u])
-                (all-users))))
+                (users/find-all users/db))))
 
 (def handler
   (-> app-routes
