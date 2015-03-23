@@ -5,11 +5,27 @@
 
 (use-fixtures :each clean-db)
 
-(deftest test-create
-  (let [username "foobar"
-        password "password"
-        user (users/create<! test-db username password)]
-    (is (= username (:username (first (users/find-all test-db)))))))
+(deftest test-create-with-username-and-password
+  (create-test-user)
+  (is (= (:username user-params)
+         (:username (first (users/find-all test-db))))))
+
+(deftest test-create-with-duplicate-username
+  (create-test-user)
+  (try
+    (create-test-user)
+    (catch Exception e
+      (is (= (class e) org.postgresql.util.PSQLException)))
+    (finally
+      (is (= 1 (count (users/find-all test-db)))))))
+
+(deftest test-create-with-no-username
+  (try
+    (create-test-user (assoc user-params :username nil))
+    (catch Exception e
+      (is (= (class e) org.postgresql.util.PSQLException)))
+    (finally
+      (is (empty? (users/find-all test-db))))))
 
 (deftest test-find-all
   (let [user1 (users/create<! test-db "foobar" "password")
