@@ -1,6 +1,6 @@
 (ns swartz.models.users_test
-  (:use clojure.test)
-  (:require [swartz.models.users :as users]))
+  (:require [swartz.models.users :as users])
+  (:use clojure.test))
 
 (def test-db {:classname "org.postgresql.Driver"
               :subprotocol "postgresql"
