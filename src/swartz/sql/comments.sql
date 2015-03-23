@@ -8,6 +8,7 @@ select c.*, cl.depth from comments c
                      where cl.parent_id = c2.id
                            and c2.parent_id is null
                            and c2.post_id = :post_id)
+       order by rank asc
 
 -- name: count-all
 -- Get the total number of comments.

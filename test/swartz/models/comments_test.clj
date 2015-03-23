@@ -46,6 +46,16 @@
                                                         (:id child-comment)
                                                         1)))))))
 
+;; The comment hierarchy here is from this article describing closure tables:
+;; https://coderwall.com/p/lixing/closure-tables-for-browsing-trees-in-sql
+;; Here's a visual representation that should make it a bit more clear:
+;; 1
+;; | - 2
+;;     | - 3
+;;         | - 6
+;;     | - 5
+;; | - 4
+
 (deftest test-find-by-post
   (testing "Find all comments for a given post"
     (let [user (create-test-user)
@@ -60,5 +70,16 @@
           comment3-params (assoc comment1-params
                                  :parent-id (:id comment2))
           comment3 (create-test-comment comment3-params)
+          comment4-params (assoc comment1-params
+                                 :parent-id (:id comment1))
+          comment4 (create-test-comment comment4-params)
+          comment5-params (assoc comment1-params
+                                 :parent-id (:id comment2))
+          comment5 (create-test-comment comment5-params)
+          comment6-params (assoc comment1-params
+                                 :parent-id (:id comment3))
+          comment6 (create-test-comment comment6-params)
           post-comments (comments/find-by-post test-db (:id post))]
-      (is (= 3 (count post-comments))))))
+      (is (= 6 (count post-comments)))
+      (is (= (:id comment6) (:id (nth post-comments 3))))
+      (is (= (:id comment5) (:id (nth post-comments 4)))))))
