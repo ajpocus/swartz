@@ -10,3 +10,7 @@ insert into comments (content, user_id, post_id, parent_id)
 -- name: find-by-id
 -- Get a comment by the given id.
 select * from comments where id = :id
+
+-- name: delete-all!
+-- Delete all comments.
+delete from comments

@@ -2,7 +2,8 @@
 ** TODO Test model functions, make sure queries are right
 *** DONE Test users model
     CLOSED: [2015-03-22 Sun 20:24]
-*** TODO Test posts model
+*** DONE Test posts model
+    CLOSED: [2015-03-22 Sun 23:06]
 *** TODO Test comments model
 ** TODO Test controllers, make sure the right data is coming through
 ** TODO Test views, make sure page renders with the data in place

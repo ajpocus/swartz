@@ -16,3 +16,7 @@ select p.*, u.username, count(c.*) comment_count from posts p
 -- Create a post with the given title, URL, content, and user id.
 insert into posts (title, url, content, user_id)
        values (:title, :url, :content, :user_id)
+
+-- name: delete-all!
+-- Delete all posts.
+delete from posts

@@ -1,19 +1,8 @@
 (ns swartz.models.posts_test
   (:require (swartz.models [posts :as posts]
                            [users :as users]))
-  (:use clojure.test))
-
-(def test-db {:classname "org.postgresql.Driver"
-              :subprotocol "postgresql"
-              :subname "//localhost:5432/swartz_test"})
-
-(defn- clean-db [f]
-  (users/delete-all! test-db)
-  (f))
-
-(defn- create-user [f]
-  (users/create<! test-db "foobar" "password")
-  (f))
+  (:use clojure.test
+        swartz.test-commons))
 
 (use-fixtures :each clean-db)
 
