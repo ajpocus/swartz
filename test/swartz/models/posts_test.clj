@@ -46,7 +46,7 @@
                         nil
                         user-id)
         (catch Exception e
-          (is (= (.getClass e) "PSQLException")))
+          (is (= (class e) org.postgresql.util.PSQLException)))
         (finally
           (is (= 0 (count (posts/find-all test-db)))))))
     (testing "Create with no user id"
@@ -57,6 +57,6 @@
                         nil
                         nil)
         (catch Exception e
-          (is (= (.getClass e) "PSQLException")))
+          (is (= (class e) org.postgresql.util.PSQLException)))
         (finally
           (is (= 0 (count (posts/find-all test-db)))))))))

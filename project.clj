@@ -17,11 +17,14 @@
   :plugins [[lein-ring "0.9.2"]
             [ragtime/ragtime.lein "0.3.8"]
             [quickie "0.3.6"]]
-  :ragtime {:migrations ragtime.sql.files/migrations
-            :database "jdbc:postgresql:swartz"}
+
   :ring {:handler swartz.core/handler
          :auto-reload? true
          :auto-refresh true}
   :main ^:skip-aot swartz.core
   :target-path "target/%s"
-  :profiles {:uberjar {:aot :all}})
+  :profiles {:uberjar {:aot :all}
+             :dev {:ragtime {:migrations ragtime.sql.files/migrations
+                             :database "jdbc:postgresql:swartz"}}
+             :test {:ragtime {:migrations ragtime.sql.files/migrations
+                              :database "jdbc:postgresql:swartz_test"}}})
