@@ -1,6 +1,13 @@
 -- name: find-by-post
 -- Get comments for a post given the post id.
-select * from comments where post_id = :post-id
+select * from comments c
+       join comments_closure cl
+       on cl.child_id = c.id
+       where exists
+             (select * from comments c2
+                     where cl.parent_id = c2.id
+                           and c2.parent_id is null
+                           and c2.post_id = :post_id)
 
 -- name: count-all
 -- Get the total number of comments.

@@ -45,6 +45,6 @@
 
 (deftest test-delete-all
   (testing "Delete all users"
-    (create-test-user "asdf" "qwerty")
+    (create-test-user)
     (users/delete-all! test-db)
     (is (= 0 (count (users/find-all test-db))))))
