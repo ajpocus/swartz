@@ -1,9 +1,9 @@
 -- name: find-all
 -- Get all posts, including the creator's username.
-select p.*, u.username, count(c.*) comment_count from posts p
-       join users u on p.user_id = u.id
-       join comments c on c.post_id = p.id
-       group by p.id, u.username
+select p.*,
+       (select username from users where id = p.user_id),
+       (select count(*) from comments where post_id = p.id) as comment_count
+       from posts p
 
 -- name: count-all
 -- Get the total number of posts
@@ -11,10 +11,11 @@ select count(*) from posts
 
 -- name: find-by-id
 -- Get a post by id, including the creator's username.
-select p.*, u.username, count(c.*) comment_count from posts p
-       join users u on p.user_id = u.id
-       join comments c on c.post_id = p.id
-       where id = :post_id
+select p.*,
+       (select username from users where id = p.user_id),
+       (select count(*) from comments where post_id = p.id) as comment_count
+       from posts p
+       where p.id = :post_id
        limit 1
 
 -- name: create<!

@@ -9,8 +9,8 @@
     CLOSED: [2015-03-23 Mon 19:27]
 ** TODO Test controllers, make sure the right data is coming through
 ** TODO Test views, make sure page renders with the data in place
-** TODO Check out options for acceptance tests w/ Selenium
-* TODO Add rank to comment on insertion
+* DONE Add rank to comment on insertion
+  CLOSED: [2015-03-23 Mon 23:18]
 ** TODO Figure out vancode/base 36 system or some other rank numbering
 * TODO Display comments with proper rank and depth
 * TODO Form validation
