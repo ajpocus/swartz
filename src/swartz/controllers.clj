@@ -15,9 +15,6 @@
    :password password
    :roles #{::user}})
 
-(defn get-homepage [req]
-  (wrap-view req views/home-page))
-
 (defn get-login [req]
   (wrap-view req views/login-form))
 

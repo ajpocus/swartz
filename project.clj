@@ -15,8 +15,7 @@
                  [com.cemerick/friend "0.2.1"]
                  [clj-time "0.9.0"]]
   :plugins [[lein-ring "0.9.2"]
-            [ragtime/ragtime.lein "0.3.8"]
-            [quickie "0.3.6"]]
+            [ragtime/ragtime.lein "0.3.8"]]
 
   :ring {:handler swartz.core/handler
          :auto-reload? true
