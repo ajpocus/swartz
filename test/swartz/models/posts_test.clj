@@ -8,7 +8,7 @@
 
 (deftest test-create-with-url
   (testing "Create a post with url only"
-    (let [user (first (users/find-all test-db))
+    (let [user (create-test-user)
           user-id (:id user)
           params (assoc post-params
                         :content nil
@@ -18,7 +18,7 @@
 
 (deftest test-create-with-content
   (testing "Create a post with content only"
-    (let [user (first (users/find-all test-db))
+    (let [user (create-test-user)
           user-id (:id user)
           params (assoc post-params
                         :url nil
@@ -28,7 +28,7 @@
 
 (deftest test-create-with-both-url-and-content
   (testing "Create a post with both content and url"
-    (let [user (first (users/find-all test-db))
+    (let [user (create-test-user)
           user-id (:id user)
           params (assoc post-params
                         :user-id user-id)
@@ -38,7 +38,7 @@
 
 (deftest test-create-with-no-url-or-content
   (testing "Try creating a post with no url or content"
-    (let [user (first (users/find-all test-db))
+    (let [user (create-test-user)
           user-id (:id user)
           params (assoc post-params
                         :url nil

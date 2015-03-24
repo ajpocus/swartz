@@ -1,1 +1,1 @@
-alter table posts remove constraint chk_post_readables;
+alter table posts drop constraint chk_post_readables;
