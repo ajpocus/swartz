@@ -41,6 +41,8 @@
 (defsnippet comment-snippet "templates/comment-snippet.html"
   [:.comment]
   [{:keys [comment]}]
+  [:.comment] (set-attr :style (str "margin-left:"
+                                    (* 16 (dec (:depth comment))) "px"))
   [:.content] (content (:content comment))
   [:.user] (append (:username comment))
   [:.reply] (set-attr :href (str "/posts/"
@@ -62,7 +64,7 @@
 
 (defsnippet post-page "templates/show-post.html"
   [:.post]
-  [{:keys [post identity]}]
+  [{:keys [identity post comments]}]
   [:a.title] (content (:title post))
   [:a.title] (if-transform (:url post)
                            (set-attr :href (:url post))
@@ -73,7 +75,7 @@
   [:.new-comment :form.comment] (set-attr :action
                                     (str "/posts/" (:id post) "/comments"))
   [:.no-comment] (if-hide identity)
-  [:.post :.comments] (append (comment-list {:comments (:comment post)}))
+  [:.post :.comments] (append (comment-list {:comments comments}))
   [:.anti-forgery-field] (html-content (anti-forgery-field)))
 
 (defsnippet new-post-form "templates/new-post-form.html"

@@ -4,8 +4,6 @@
             [clj-time.coerce :refer [from-sql-time]])
   (:use net.cgrand.enlive-html))
 
-(def not-nil? (complement nil?))
-
 (defn if-show [pred]
   "If the predicate is truthy, show the node. Otherwise, hide it."
   (fn [node]
@@ -77,7 +75,7 @@
           "1 minute ago")))))
 
 (defn comment-count [post]
-  (let [num-comments (count (:comment post))]
+  (let [num-comments (:comment_count post)]
     (str num-comments (if (= num-comments 1)
                      " comment"
                      " comments"))))

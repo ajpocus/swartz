@@ -13,8 +13,7 @@
                  [org.postgresql/postgresql "9.4-1201-jdbc41"]
                  [ragtime "0.3.8"]
                  [com.cemerick/friend "0.2.1"]
-                 [clj-time "0.9.0"]
-                 [midje "1.6.3"]]
+                 [clj-time "0.9.0"]]
   :plugins [[lein-ring "0.9.2"]
             [ragtime/ragtime.lein "0.3.8"]]
 
@@ -25,7 +24,6 @@
   :target-path "target/%s"
   :profiles {:uberjar {:aot :all}
              :dev {:ragtime {:migrations ragtime.sql.files/migrations
-                             :database "jdbc:postgresql:swartz"}
-                   :plugins [[lein-midje "3.1.3"]]}
+                             :database "jdbc:postgresql:swartz"}}
              :test {:ragtime {:migrations ragtime.sql.files/migrations
                               :database "jdbc:postgresql:swartz_test"}}})

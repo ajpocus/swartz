@@ -56,8 +56,9 @@
 (defn get-post [req]
   (let [post-id (Integer/parseInt (:id (:params req)))
         post (first (posts/find-by-id posts/db post-id))
+        comment-list (comments/find-by-post comments/db post-id)
         identity (friend/identity req)]
-    (wrap-view req views/post-page {:post post})))
+    (wrap-view req views/post-page {:post post :comments comment-list})))
 
 (defn post-comment [req]
   (let [params (:params req)

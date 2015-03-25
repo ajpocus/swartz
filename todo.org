@@ -12,7 +12,8 @@
 * DONE Add rank to comment on insertion
   CLOSED: [2015-03-23 Mon 23:18]
 ** TODO Figure out vancode/base 36 system or some other rank numbering
-* TODO Display comments with proper rank and depth
+* DONE Display comments with proper rank and depth
+  CLOSED: [2015-03-25 Wed 19:25]
 * TODO Form validation
 ** TODO login
 ** TODO signup
