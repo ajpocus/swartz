@@ -1,8 +1,10 @@
 -- name: find-by-post
 -- Get comments for a post given the post id.
-select c.*, cl.depth from comments c
+select c.*, cl.depth, u.username from comments c
        join comments_closure cl
        on cl.child_id = c.id
+       join users u
+       on u.id = c.user_id
        where exists
              (select * from comments c2
                      where cl.parent_id = c2.id
