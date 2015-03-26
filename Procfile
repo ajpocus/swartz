@@ -1,1 +1,1 @@
-web: java $JVM_OPTS -jar target/uberjar/swartz-1.0.0-standalone.jar
+web: java $JVM_OPTS -cp target/swartz-standalone.jar clojure.main -m swartz.core

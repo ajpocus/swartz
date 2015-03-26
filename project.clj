@@ -22,6 +22,7 @@
          :auto-refresh true}
   :main ^:skip-aot swartz.core
   :target-path "target/%s"
+  :uberjar-name "swartz-standalone.jar"
   :profiles {:uberjar {:aot :all}
              :dev {:ragtime {:migrations ragtime.sql.files/migrations
                              :database "jdbc:postgresql:swartz"}}
