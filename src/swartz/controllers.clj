@@ -26,14 +26,22 @@
 
 (defn post-signup [req]
   (let [{:keys [username password]} (:params req)]
-    (if (> (count (users/find-by-username users/db username)) 0)
+    (if (empty? username)
       (assoc-in (redirect "/signup")
                 [:session :_flash]
-                "That username is taken.")
-      (let [user (users/create<! users/db
-                                 username
-                                 (creds/hash-bcrypt password))]
-        (friend/merge-authentication (redirect "/") (user-map user))))))
+                "Please enter a username.")
+      (if (empty? password)
+        (assoc-in (redirect "/signup")
+                  [:session :_flash]
+                  "Please enter a password.")
+        (if (> (count (users/find-by-username users/db username)) 0)
+          (assoc-in (redirect "/signup")
+                    [:session :_flash]
+                    "That username is taken.")
+          (let [user (users/create<! users/db
+                                     username
+                                     (creds/hash-bcrypt password))]
+            (friend/merge-authentication (redirect "/") (user-map user))))))))
 
 (defn get-posts [req]
   (let [posts (posts/find-all posts/db)

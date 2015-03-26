@@ -26,7 +26,8 @@
 * TODO Flash messages on invalid form input
 ** DONE login
    CLOSED: [2015-03-25 Wed 19:59]
-** TODO signup
+** DONE signup
+   CLOSED: [2015-03-25 Wed 20:17]
 ** TODO new post
 ** TODO new comment
 * TODO Upvotes and downvotes
