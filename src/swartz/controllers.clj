@@ -57,21 +57,13 @@
         user (first (users/find-by-username users/db (:current identity)))
         title (:title params)
         url (:url params)
-        content (:content params)]
-    (if (empty? title)
-      (assoc-in (redirect "/posts/new")
-                [:session :_flash]
-                "Please enter a title.")
-      (if (and (empty? url) (empty? content))
-        (assoc-in (redirect "/posts/new")
-                  [:session :_flash]
-                  "Please enter a URL or content.")
-        (let [post (posts/create<! posts/db
-                                   title
-                                   url
-                                   content
-                                   (:id user))]
-          (redirect (str "/posts/" (:id post))))))))
+        content (:content params)
+        post (posts/create<! posts/db
+                             (:title params)
+                             (:url params)
+                             (:content params)
+                             (:id user))]
+    (redirect (str "/posts/" (:id post)))))
 
 (defn get-post [req]
   (let [post-id (Integer/parseInt (:id (:params req)))
