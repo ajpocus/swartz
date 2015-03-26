@@ -16,7 +16,10 @@
    :roles #{::user}})
 
 (defn get-login [req]
-  (wrap-view req views/login-form))
+  (let [params (:params req)
+        failed (not (empty? (:login_failed params)))]
+    (wrap-view req views/login-form {:failed failed
+                                     :username (:username params)})))
 
 (defn get-signup [req]
   (wrap-view req views/signup-form))

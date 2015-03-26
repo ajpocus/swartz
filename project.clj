@@ -1,5 +1,5 @@
 (defproject swartz "0.1.0-SNAPSHOT"
-  :description "A Reddit clone in Clojure (named for Aaron Swartz)"
+  :description "A Reddit/Hacker News clone in Clojure (named for Aaron Swartz)"
   :url "http://example.com/FIXME"
   :license {:name "MIT License"
             :url "http://opensource.org/licenses/MIT"}

@@ -10,7 +10,10 @@
 
 (defsnippet login-form "templates/login.html"
   [:.login]
-  [{:keys [identity flash]}]
+  [{:keys [identity flash failed username]}]
+  [:.message] (if-transform failed
+                          (content "login failed"))
+  [[:input (attr= :name "username")]] (set-attr :value username)
   [:.anti-forgery-field] (html-content (anti-forgery-field)))
 
 (defsnippet signup-form "templates/signup.html"

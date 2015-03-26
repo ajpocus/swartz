@@ -11,17 +11,21 @@
 ** TODO Test views, make sure page renders with the data in place
 * DONE Add rank to comment on insertion
   CLOSED: [2015-03-23 Mon 23:18]
-** TODO Figure out vancode/base 36 system or some other rank numbering
+** DONE Figure out vancode/base 36 system or some other rank numbering
+   CLOSED: [2015-03-25 Wed 20:00]
 * DONE Display comments with proper rank and depth
   CLOSED: [2015-03-25 Wed 19:25]
 * TODO Form validation
-** TODO login
-** TODO signup
+** DONE login
+   CLOSED: [2015-03-25 Wed 19:59]
+** DONE signup
+   CLOSED: [2015-03-25 Wed 19:59]
 ** TODO new post
 ** TODO new comment
 * TODO Style the pages to not look like shit
 * TODO Flash messages on invalid form input
-** TODO login
+** DONE login
+   CLOSED: [2015-03-25 Wed 19:59]
 ** TODO signup
 ** TODO new post
 ** TODO new comment
