@@ -10,7 +10,8 @@
                              [credentials :as creds])
             [swartz.controllers :as ctrl]
             [swartz.middleware :as ware]
-            [swartz.models.users :as users])
+            (swartz.models [users :as users]
+                           [core :refer [db]]))
   (:gen-class))
 
 (defroutes app-routes
@@ -37,7 +38,7 @@
 (defn- get-user-map []
   (into {} (map (fn [u]
                   [(:username u) u])
-                (users/find-all users/db))))
+                (users/find-all db))))
 
 (def handler
   (-> app-routes

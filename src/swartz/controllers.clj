@@ -7,7 +7,8 @@
             [swartz.views :as views]
             (swartz.models [users :as users]
                            [posts :as posts]
-                           [comments :as comments]))
+                           [comments :as comments]
+                           [core :refer [db]]))
   (:use swartz.helpers))
 
 (defn- user-map [{:keys [username password]}]
@@ -34,17 +35,17 @@
         (assoc-in (redirect "/signup")
                   [:session :_flash]
                   "Please enter a password.")
-        (if (> (count (users/find-by-username users/db username)) 0)
+        (if (> (count (users/find-by-username db username)) 0)
           (assoc-in (redirect "/signup")
                     [:session :_flash]
                     "That username is taken.")
-          (let [user (users/create<! users/db
+          (let [user (users/create<! db
                                      username
                                      (creds/hash-bcrypt password))]
             (friend/merge-authentication (redirect "/") (user-map user))))))))
 
 (defn get-posts [req]
-  (let [posts (posts/find-all posts/db)
+  (let [posts (posts/find-all db)
         identity (friend/identity req)]
     (wrap-view req views/post-list {:posts posts})))
 
@@ -54,11 +55,11 @@
 (defn post-post [req]
   (let [params (:params req)
         identity (friend/identity req)
-        user (first (users/find-by-username users/db (:current identity)))
+        user (first (users/find-by-username db (:current identity)))
         title (:title params)
         url (:url params)
         content (:content params)
-        post (posts/create<! posts/db
+        post (posts/create<! db
                              (:title params)
                              (:url params)
                              (:content params)
@@ -67,8 +68,8 @@
 
 (defn get-post [req]
   (let [post-id (Integer/parseInt (:id (:params req)))
-        post (first (posts/find-by-id posts/db post-id))
-        comment-list (comments/find-by-post comments/db post-id)
+        post (first (posts/find-by-id db post-id))
+        comment-list (comments/find-by-post db post-id)
         identity (friend/identity req)]
     (wrap-view req views/post-page {:post post :comments comment-list})))
 
@@ -78,10 +79,10 @@
         parent-id (if (empty? (:parent_id params))
                     nil
                     (Integer/parseInt (:parent_id params)))
-        post (first (posts/find-by-id posts/db post-id))
+        post (first (posts/find-by-id db post-id))
         identity (friend/identity req)
-        user (first (users/find-by-username users/db (:current identity)))]
-    (comments/create<! comments/db
+        user (first (users/find-by-username db (:current identity)))]
+    (comments/create<! db
                       (:content params)
                       (:id user)
                       post-id
@@ -92,6 +93,6 @@
   (let [params (:params req)
         post-id (Integer/parseInt (:post_id params))
         comment-id (Integer/parseInt (:comment_id params))
-        post (first (posts/find-by-id posts/db post-id))
-        comment (first (comments/find-by-id comments/db comment-id))]
+        post (first (posts/find-by-id db post-id))
+        comment (first (comments/find-by-id db comment-id))]
     (wrap-view req views/show-comment {:post post :comment comment})))
