@@ -53,4 +53,6 @@
 (defn -main
   "Start a ring/jetty server."
   [& args]
-  (run-jetty handler {:port 3000}))
+  (let [port (or (System/getenv "PORT") 3000)]
+    (run-jetty handler {:port port
+                        :join? false})))
