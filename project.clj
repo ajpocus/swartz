@@ -14,6 +14,7 @@
                  [ragtime "0.3.8"]
                  [com.cemerick/friend "0.2.1"]
                  [clj-time "0.9.0"]]
+  :min-lein-version "2.0.0"
   :plugins [[lein-ring "0.9.2"]
             [ragtime/ragtime.lein "0.3.8"]]
 
