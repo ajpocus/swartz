@@ -1,8 +1,4 @@
 (ns swartz.models.core
-  (:require [environ.core :refer [env]]
-            [clojure.string :as str]))
+  (:require [environ.core :refer [env]]))
 
-(def db {:connection-uri (str/replace (env :database-url)
-                                      #":postgres:"
-                                      ":postgresql:")
-         :classname "org.postgresql.Driver"})
+(def db {:connection-uri (env :database-url)})
