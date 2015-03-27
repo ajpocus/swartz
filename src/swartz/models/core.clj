@@ -1,5 +1,4 @@
-(ns swartz.models.core)
+(ns swartz.models.core
+  (:require [environ.core :refer [env]]))
 
-(def db {:classname "org.postgresql.Driver"
-         :subprotocol "postgresql"
-         :subname "//localhost:5432/swartz"})
+(def db {:connection-uri (env :database-url)})

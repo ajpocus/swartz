@@ -13,10 +13,12 @@
                  [org.postgresql/postgresql "9.4-1201-jdbc41"]
                  [ragtime "0.3.8"]
                  [com.cemerick/friend "0.2.1"]
-                 [clj-time "0.9.0"]]
+                 [clj-time "0.9.0"]
+                 [environ "1.0.0"]]
   :min-lein-version "2.0.0"
   :plugins [[lein-ring "0.9.2"]
-            [ragtime/ragtime.lein "0.3.8"]]
+            [ragtime/ragtime.lein "0.3.8"]
+            [lein-environ "1.0.0"]]
 
   :ring {:handler swartz.core/handler
          :auto-reload? true
@@ -28,4 +30,6 @@
              :dev {:ragtime {:migrations ragtime.sql.files/migrations
                              :database "jdbc:postgresql:swartz"}}
              :test {:ragtime {:migrations ragtime.sql.files/migrations
-                              :database "jdbc:postgresql:swartz_test"}}})
+                              :database "jdbc:postgresql:swartz_test"}}
+             :production {:ragtime {:migrations ragtime.sql.files/migrations
+                                    :database (System/getenv "DATABASE_URL")}}})
