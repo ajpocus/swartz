@@ -10,7 +10,7 @@
                  [compojure "1.3.2"]
                  [enlive "1.1.5"]
                  [yesql "0.4.0"]
-                 [org.postgresql/postgresql "9.4-1201-jdbc41"]
+                 [org.postgresql/postgresql "9.4-1201-jdbc4"]
                  [ragtime "0.3.8"]
                  [com.cemerick/friend "0.2.1"]
                  [clj-time "0.9.0"]
